@@ -999,3 +999,64 @@ select option, select optgroup { background: var(--sc-high); color: var(--on-sur
 .empty-state p { font-size: 13px; color: var(--on-variant); margin-bottom: 4px; }
 .empty-state small { font-size: 11px; color: rgba(194, 198, 214, 0.5); }
 .empty-state .empty-icon { font-size: 26px; margin-bottom: 8px; }
+
+/* ============================================================
+   Settings tabs (CSS-only, radio + :checked driven)
+   ============================================================ */
+.tab-radio { position: absolute; opacity: 0; pointer-events: none; width: 0; height: 0; }
+
+.tabbar {
+  position: sticky;
+  top: 68px;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  padding: 8px 16px;
+  background: rgba(16, 19, 26, 0.72);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 38px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  color: rgba(194, 198, 214, 0.7);
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.tab svg { width: 16px; height: 16px; fill: currentColor; flex-shrink: 0; }
+.tab span { white-space: nowrap; }
+.tab:hover {
+  color: var(--on-surface);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* active tab styling driven by matching radio */
+#tab-license:checked ~ .tabbar label[for="tab-license"],
+#tab-ai:checked ~ .tabbar label[for="tab-ai"],
+#tab-auto:checked ~ .tabbar label[for="tab-auto"] {
+  color: var(--primary);
+  background: rgba(173, 198, 255, 0.08);
+  border-color: rgba(173, 198, 255, 0.25);
+  box-shadow: inset 0 0 12px rgba(173, 198, 255, 0.06);
+}
+
+/* panel visibility: hide all, then reveal the checked one */
+.tab-panel { display: none; flex-direction: column; gap: 16px; animation: tabIn 0.25s ease; }
+#tab-license:checked ~ .main .tab-panel[data-tab="license"],
+#tab-ai:checked ~ .main .tab-panel[data-tab="ai"],
+#tab-auto:checked ~ .main .tab-panel[data-tab="auto"] {
+  display: flex;
+}
+@keyframes tabIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
