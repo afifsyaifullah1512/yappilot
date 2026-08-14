@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>YapPilot - Success Posts</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-surface-variant": "#c2c6d6",
+                      "secondary": "#4edea3",
+                      "on-secondary-container": "#00311f",
+                      "on-tertiary-container": "#5c0008",
+                      "surface-container-high": "#272a31",
+                      "secondary-container": "#00a572",
+                      "on-background": "#e1e2eb",
+                      "background": "#10131a",
+                      "inverse-on-surface": "#2e3037",
+                      "on-primary-container": "#00285d",
+                      "on-surface": "#e1e2eb",
+                      "surface": "#10131a",
+                      "on-secondary-fixed-variant": "#005236",
+                      "tertiary": "#ffb3ad",
+                      "primary-container": "#4d8eff",
+                      "primary-fixed": "#d8e2ff",
+                      "on-error-container": "#ffdad6",
+                      "surface-dim": "#10131a",
+                      "tertiary-container": "#ff5451",
+                      "secondary-fixed": "#6ffbbe",
+                      "on-secondary-fixed": "#002113",
+                      "on-primary-fixed": "#001a42",
+                      "on-tertiary": "#68000a",
+                      "tertiary-fixed-dim": "#ffb3ad",
+                      "on-primary": "#002e6a",
+                      "outline-variant": "#424754",
+                      "primary": "#adc6ff",
+                      "primary-fixed-dim": "#adc6ff",
+                      "error": "#ffb4ab",
+                      "tertiary-fixed": "#ffdad7",
+                      "surface-variant": "#32353c",
+                      "on-secondary": "#003824",
+                      "surface-bright": "#363940",
+                      "surface-container-lowest": "#0b0e14",
+                      "error-container": "#93000a",
+                      "surface-tint": "#adc6ff",
+                      "outline": "#8c909f",
+                      "on-tertiary-fixed": "#410004",
+                      "on-tertiary-fixed-variant": "#930013",
+                      "secondary-fixed-dim": "#4edea3",
+                      "inverse-surface": "#e1e2eb",
+                      "on-error": "#690005",
+                      "on-primary-fixed-variant": "#004395",
+                      "surface-container-highest": "#32353c",
+                      "surface-container-low": "#191c22",
+                      "inverse-primary": "#005ac2",
+                      "surface-container": "#1d2026"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "edge-margin": "16px",
+                      "stack-gap": "12px",
+                      "panel-width": "420px",
+                      "item-padding": "8px 12px"
+              },
+              "fontFamily": {
+                      "h2": [
+                              "Inter"
+                      ],
+                      "label-caps": [
+                              "Inter"
+                      ],
+                      "h1": [
+                              "Inter"
+                      ],
+                      "mono": [
+                              "JetBrains Mono"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "body-sm": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "h2": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-caps": [
+                              "11px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "h1": [
+                              "20px",
+                              {
+                                      "lineHeight": "28px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "mono": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-sm": [
+                              "13px",
+                              {
+                                      "lineHeight": "18px",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        body {
+            width: 420px;
+            margin: 0 auto;
+            background-color: #0B0E14;
+            color: #e1e2eb;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .glass-header {
+            background: rgba(11, 14, 20, 0.8);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .success-glow {
+            box-shadow: inset 0 0 80px rgba(78, 222, 163, 0.05);
+            background: linear-gradient(145deg, rgba(78,222,163,0.1) 0%, rgba(29,32,38,0.4) 100%);
+            border: 1px solid rgba(78, 222, 163, 0.15);
+        }
+        
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="flex flex-col relative font-body-md text-body-md antialiased">
+<!-- Top Navigation: Transactional Page (No global shell nav) -->
+<header class="glass-header w-[420px] h-16 flex justify-between items-center px-edge-margin top-0 sticky z-50 border-b border-white/5">
+<div class="flex items-center gap-3">
+<button class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-variant transition-colors text-on-surface active:scale-95">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="font-h1 text-h1 text-on-surface tracking-tight">Success Posts</h1>
+</div>
+<button class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-variant transition-colors text-on-surface-variant active:scale-95">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</header>
+<main class="flex-1 flex flex-col p-edge-margin gap-stack-gap">
+<!-- Big Green Stat Card -->
+<section class="success-glow rounded-2xl p-6 flex flex-col items-center justify-center relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-br from-secondary/10 to-transparent pointer-events-none opacity-50"></div>
+<span class="material-symbols-outlined text-secondary text-[40px] mb-3 drop-shadow-[0_0_15px_rgba(78,222,163,0.3)]" data-icon="check_circle" data-weight="fill">check_circle</span>
+<div class="font-h1 text-[48px] font-bold text-secondary tracking-tighter leading-none mb-1 drop-shadow-[0_2px_10px_rgba(78,222,163,0.2)]">36</div>
+<div class="font-label-caps text-label-caps text-secondary/80 uppercase tracking-[0.1em] mt-1">Success</div>
+</section>
+<!-- Action Row -->
+<div class="flex gap-3 mt-2 mb-2">
+<button class="flex-1 bg-surface-container-high rounded-xl h-11 flex items-center justify-center gap-2 hover:bg-surface-variant transition-colors text-on-surface active:scale-[0.98] border border-white/5">
+<span class="material-symbols-outlined text-[18px]" data-icon="download">download</span>
+<span class="font-body-sm text-body-sm font-semibold">Export CSV</span>
+</button>
+<button class="flex-1 bg-error-container/20 rounded-xl h-11 flex items-center justify-center gap-2 hover:bg-error-container/40 transition-colors text-error active:scale-[0.98] border border-error/10">
+<span class="material-symbols-outlined text-[18px]" data-icon="delete">delete</span>
+<span class="font-body-sm text-body-sm font-semibold">Clear All</span>
+</button>
+</div>
+<!-- List of Successful Posts -->
+<div class="flex flex-col gap-2">
+<!-- Post Item 1 -->
+<div class="bg-surface-container/50 rounded-xl p-4 flex flex-col gap-4 hover:bg-surface-container-high transition-colors group cursor-pointer relative overflow-hidden border border-transparent hover:border-secondary/20">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-secondary rounded-l-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-variant flex items-center justify-center border border-white/10 overflow-hidden shadow-sm">
+<img class="w-full h-full object-cover" data-alt="A futuristic avatar of a high-tech corporate power user, glowing electric blue accents, obsidian background, cyberpunk aesthetic, highly detailed." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSSYCm2oX6dqMRZIX4yFbRmOvOfZfFEkaivqPNnuyTDeJmV7ZLUmctas6RgerXlUUWt8gXPHIO9AV_uoHXSf18Rc2XY5DFWxw2rGiWrQCMsiQyGjR4FCi46BI7a5dyW2S-Il4ATUzEAgNo8QQTFLykT4Rrn6a9QJXJRjLS7LIjDqo8Tikd-YDCeVBfxRQ7f7EfWGdKdAW_NTmghR9L3huA1J7QP0G5d_ZZ0GJ60cz-Rfut9brxH9ADLw"/>
+</div>
+<div class="flex flex-col">
+<span class="font-body-md text-body-md font-semibold text-on-surface">@techguru_x</span>
+<span class="font-mono text-[11px] text-on-surface-variant/80">twitter.com/p/123456...</span>
+</div>
+</div>
+<span class="font-body-sm text-[12px] text-on-surface-variant/70">2m ago</span>
+</div>
+<div class="flex gap-2 ml-13 pl-[52px]">
+<span class="bg-secondary/10 text-secondary font-label-caps text-label-caps px-2.5 py-1 rounded-md flex items-center gap-1.5 border border-secondary/20">
+<span class="material-symbols-outlined text-[14px]" data-icon="thumb_up">thumb_up</span> Liked
+                    </span>
+<span class="bg-secondary/10 text-secondary font-label-caps text-label-caps px-2.5 py-1 rounded-md flex items-center gap-1.5 border border-secondary/20">
+<span class="material-symbols-outlined text-[14px]" data-icon="chat_bubble">chat_bubble</span> Commented
+                    </span>
+</div>
+</div>
+<!-- Post Item 2 -->
+<div class="bg-surface-container/50 rounded-xl p-4 flex flex-col gap-4 hover:bg-surface-container-high transition-colors group cursor-pointer relative overflow-hidden border border-transparent hover:border-secondary/20">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-secondary rounded-l-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-variant flex items-center justify-center border border-white/10 overflow-hidden shadow-sm">
+<img class="w-full h-full object-cover" data-alt="A sleek corporate AI assistant avatar, dark mode, glowing neon highlights, sophisticated minimalist design, high resolution." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCAmE1uEhiacW7ZBYIFFU2_f8qQVuRoCPDKtJCM8wrTn1_-YBzHZlsTXVK2FmM591U_W0PClqq-spU5V6k-Ojj_1xwRyYKCAMPSEsG2-3NV3wOyg1wWpQFuLodky_sbxwTxfP-9yjHQssA0wwdV1DkVRlx817RNHUYHZuM3U7hzvC5XFNUM2p9fH5XtUOa1DfQEzWExjECfrInAdzKHHva_112tv7wek1nK90Gz3b32__w1SSmMizcRqA"/>
+</div>
+<div class="flex flex-col">
+<span class="font-body-md text-body-md font-semibold text-on-surface">@ai_innovator</span>
+<span class="font-mono text-[11px] text-on-surface-variant/80">linkedin.com/in/p...</span>
+</div>
+</div>
+<span class="font-body-sm text-[12px] text-on-surface-variant/70">15m ago</span>
+</div>
+<div class="flex gap-2 ml-13 pl-[52px]">
+<span class="bg-secondary/10 text-secondary font-label-caps text-label-caps px-2.5 py-1 rounded-md flex items-center gap-1.5 border border-secondary/20">
+<span class="material-symbols-outlined text-[14px]" data-icon="thumb_up">thumb_up</span> Liked
+                    </span>
+</div>
+</div>
+<!-- Post Item 3 -->
+<div class="bg-surface-container/50 rounded-xl p-4 flex flex-col gap-4 hover:bg-surface-container-high transition-colors group cursor-pointer relative overflow-hidden border border-transparent hover:border-secondary/20">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-secondary rounded-l-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-variant flex items-center justify-center border border-white/10 overflow-hidden shadow-sm">
+<div class="w-full h-full bg-primary/10 flex items-center justify-center text-primary font-h2 text-h2">S</div>
+</div>
+<div class="flex flex-col">
+<span class="font-body-md text-body-md font-semibold text-on-surface">@startup_life</span>
+<span class="font-mono text-[11px] text-on-surface-variant/80">twitter.com/p/987654...</span>
+</div>
+</div>
+<span class="font-body-sm text-[12px] text-on-surface-variant/70">1h ago</span>
+</div>
+<div class="flex gap-2 ml-13 pl-[52px]">
+<span class="bg-secondary/10 text-secondary font-label-caps text-label-caps px-2.5 py-1 rounded-md flex items-center gap-1.5 border border-secondary/20">
+<span class="material-symbols-outlined text-[14px]" data-icon="chat_bubble">chat_bubble</span> Commented
+                    </span>
+</div>
+</div>
+</div>
+</main>
+</body></html>

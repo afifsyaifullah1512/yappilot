@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>YapPilot - Settings</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-surface-variant": "#a1a1aa", /* Zinc 400 */
+                      "secondary": "#4edea3",
+                      "on-secondary-container": "#00311f",
+                      "on-tertiary-container": "#5c0008",
+                      "surface-container-high": "#272a31",
+                      "secondary-container": "#00a572",
+                      "on-background": "#fafafa", /* Zinc 50 */
+                      "background": "#09090b", /* Zinc 950 */
+                      "inverse-on-surface": "#2e3037",
+                      "on-primary-container": "#00285d",
+                      "on-surface": "#fafafa", /* Zinc 50 */
+                      "surface": "#09090b", /* Zinc 950 */
+                      "on-secondary-fixed-variant": "#005236",
+                      "tertiary": "#ffb3ad",
+                      "primary-container": "#4d8eff",
+                      "primary-fixed": "#d8e2ff",
+                      "on-error-container": "#ffdad6",
+                      "surface-dim": "#09090b",
+                      "tertiary-container": "#ff5451",
+                      "secondary-fixed": "#6ffbbe",
+                      "on-secondary-fixed": "#002113",
+                      "on-primary-fixed": "#001a42",
+                      "on-tertiary": "#68000a",
+                      "tertiary-fixed-dim": "#ffb3ad",
+                      "on-primary": "#002e6a",
+                      "outline-variant": "#27272a", /* Zinc 800 */
+                      "primary": "#e4e4e7", /* Zinc 200 - refined primary */
+                      "primary-fixed-dim": "#adc6ff",
+                      "error": "#ffb4ab",
+                      "tertiary-fixed": "#ffdad7",
+                      "surface-variant": "#18181b", /* Zinc 900 */
+                      "on-secondary": "#003824",
+                      "surface-bright": "#27272a", /* Zinc 800 */
+                      "surface-container-lowest": "#000000", /* Black */
+                      "error-container": "#93000a",
+                      "surface-tint": "#e4e4e7",
+                      "outline": "#3f3f46", /* Zinc 700 */
+                      "on-tertiary-fixed": "#410004",
+                      "on-tertiary-fixed-variant": "#930013",
+                      "secondary-fixed-dim": "#4edea3",
+                      "inverse-surface": "#e1e2eb",
+                      "on-error": "#690005",
+                      "on-primary-fixed-variant": "#004395",
+                      "surface-container-highest": "#27272a", /* Zinc 800 */
+                      "surface-container-low": "#18181b", /* Zinc 900 */
+                      "inverse-primary": "#005ac2",
+                      "surface-container": "#18181b", /* Zinc 900 */
+                      "accent": "#5E6AD2" /* Linear style purple/blue accent */
+              },
+              "borderRadius": {
+                      "DEFAULT": "6px",
+                      "lg": "8px",
+                      "xl": "12px",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "edge-margin": "20px",
+                      "stack-gap": "16px",
+                      "panel-width": "420px",
+                      "item-padding": "10px 14px"
+              },
+              "fontFamily": {
+                      "h2": [
+                              "Inter"
+                      ],
+                      "label-caps": [
+                              "Inter"
+                      ],
+                      "h1": [
+                              "Inter"
+                      ],
+                      "mono": [
+                              "JetBrains Mono"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "body-sm": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "h2": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-caps": [
+                              "11px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.04em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "h1": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "mono": [
+                              "13px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-sm": [
+                              "13px",
+                              {
+                                      "lineHeight": "18px",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              },
+              boxShadow: {
+                  'glow': '0 0 0 1px rgba(94, 106, 210, 0.5), 0 0 12px 0 rgba(94, 106, 210, 0.3)',
+                  'subtle': '0 1px 2px rgba(0, 0, 0, 0.1)',
+                  'glass': 'inset 0 1px 0 0 rgba(255, 255, 255, 0.05)'
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        body {
+            background-color: #000000;
+            color: #fafafa;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            padding: 24px 0;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .extension-container {
+            width: 420px;
+            background-color: #09090b;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 0 0 1px rgba(255,255,255,0.08), 0 12px 32px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .glass-surface {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.02);
+        }
+
+        .input-glass {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fafafa;
+            transition: all 0.2s ease;
+        }
+
+        .input-glass:focus {
+            outline: none;
+            border-color: #5E6AD2;
+            box-shadow: 0 0 0 1px #5E6AD2;
+            background: rgba(0,0,0,0.4);
+        }
+
+        .input-glass::placeholder {
+            color: #71717a; /* Zinc 500 */
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Toggle Switch - Linear Style */
+        .linear-toggle {
+            appearance: none;
+            width: 32px;
+            height: 18px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 99px;
+            position: relative;
+            cursor: pointer;
+            outline: none;
+            transition: background 0.2s ease;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.2);
+        }
+        
+        .linear-toggle::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 14px;
+            height: 14px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .linear-toggle:checked {
+            background: #5E6AD2;
+        }
+
+        .linear-toggle:checked::after {
+            transform: translateX(14px);
+        }
+        
+        /* Select Cards - Linear Style */
+        .provider-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.2s ease;
+        }
+        
+        .provider-card:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        .provider-card.active {
+            background: rgba(94, 106, 210, 0.05);
+            border-color: rgba(94, 106, 210, 0.5);
+            box-shadow: 0 0 0 1px rgba(94, 106, 210, 0.5), inset 0 0 12px rgba(94, 106, 210, 0.1);
+        }
+        
+        .provider-card.active .check-icon {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .check-icon {
+            transform: scale(0.8);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-primary {
+            background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%), #fafafa;
+            color: #09090b;
+            border: 1px solid rgba(0,0,0,0.1);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            transition: all 0.2s ease;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%), #e4e4e7;
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            color: #fafafa;
+            transition: all 0.2s ease;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.06);
+            border-color: rgba(255,255,255,0.12);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="antialiased text-body-md">
+<div class="extension-container flex flex-col h-[650px]">
+<!-- Header -->
+<header class="flex justify-between items-center px-edge-margin h-14 w-full bg-surface/80 backdrop-blur-md border-b border-white/5 top-0 sticky z-10">
+<button class="text-on-surface-variant hover:text-on-surface transition-colors p-1.5 rounded-md hover:bg-white/5 active:scale-95 duration-200 -ml-1.5">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
+</button>
+<h1 class="font-h1 text-h1 text-on-surface">Settings</h1>
+<div class="w-8"></div> <!-- Spacer for balance -->
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 overflow-y-auto px-edge-margin py-stack-gap space-y-stack-gap">
+<!-- License Key Card -->
+<section class="glass-surface rounded-xl p-4 flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">key</span>
+<h2 class="font-h2 text-h2 text-on-surface">License Key</h2>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 font-mono text-[10px] uppercase tracking-wider border border-emerald-500/20">Active</span>
+</div>
+<div class="flex gap-2 mt-1">
+<input class="input-glass rounded-lg px-3 py-2 flex-1 font-mono text-mono text-on-surface-variant" placeholder="Enter license key" type="text" value="XAE-9A2F-B3C1-4D5E"/>
+<button class="btn-secondary font-h2 text-h2 px-4 py-2 rounded-lg hover:bg-white/10 transition-colors active:scale-95">
+                    Verify
+                </button>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+                Manage your subscription via Discord using <code class="bg-white/5 px-1.5 py-0.5 rounded text-on-surface font-mono text-[11px] border border-white/10">/license</code>
+</p>
+</section>
+<!-- AI Provider Selection -->
+<section class="glass-surface rounded-xl p-4 flex flex-col gap-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">neurology</span>
+<h2 class="font-h2 text-h2 text-on-surface">AI Engine</h2>
+</div>
+<div class="grid grid-cols-3 gap-3">
+<div class="provider-card active rounded-lg p-3 flex flex-col items-center justify-center gap-1.5 cursor-pointer relative">
+<span class="material-symbols-outlined text-accent check-icon absolute top-2 right-2 text-[14px] opacity-0" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-h2 text-h2 text-on-surface">GROQ</span>
+<span class="font-label-caps text-label-caps text-secondary/80">FAST &amp; FREE</span>
+</div>
+<div class="provider-card rounded-lg p-3 flex flex-col items-center justify-center gap-1.5 cursor-pointer relative">
+<span class="material-symbols-outlined text-accent check-icon absolute top-2 right-2 text-[14px] opacity-0" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-h2 text-h2 text-on-surface">Gemini</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">GOOGLE AI</span>
+</div>
+<div class="provider-card rounded-lg p-3 flex flex-col items-center justify-center gap-1.5 cursor-pointer relative">
+<span class="material-symbols-outlined text-accent check-icon absolute top-2 right-2 text-[14px] opacity-0" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-h2 text-h2 text-on-surface">Router</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">MULTI-MODEL</span>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-center">
+<label class="font-body-sm text-body-sm text-on-surface-variant">API Key</label>
+<a class="font-body-sm text-body-sm text-accent hover:text-accent/80 transition-colors flex items-center gap-1" href="#">Get Key <span class="material-symbols-outlined text-[12px]">open_in_new</span></a>
+</div>
+<div class="relative">
+<input class="input-glass rounded-lg px-3 py-2 w-full font-mono text-mono pr-10 text-on-surface-variant" placeholder="Enter API Key" type="password" value="gsk_supersecretkey123456789"/>
+<button class="absolute right-2 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface transition-colors p-1 rounded-md hover:bg-white/5">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Prompt Template -->
+<section class="glass-surface rounded-xl p-4 flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">edit_document</span>
+<h2 class="font-h2 text-h2 text-on-surface">Prompt Template</h2>
+</div>
+<button class="text-on-surface-variant hover:text-on-surface transition-colors p-1 rounded-md hover:bg-white/5">
+<span class="material-symbols-outlined text-[16px]">history</span>
+</button>
+</div>
+<textarea class="input-glass rounded-lg px-3 py-2 w-full h-28 font-mono text-mono resize-none leading-relaxed text-on-surface-variant" placeholder="Write a highly engaging, thought-provoking comment that adds value to this post: {{POST_CONTENT}}"></textarea>
+<div class="flex gap-2 flex-wrap">
+<span class="bg-white/5 px-2 py-1 rounded-md text-on-surface-variant font-mono text-[11px] border border-white/5 cursor-pointer hover:bg-white/10 hover:text-on-surface transition-colors">{{AUTHOR}}</span>
+<span class="bg-white/5 px-2 py-1 rounded-md text-on-surface-variant font-mono text-[11px] border border-white/5 cursor-pointer hover:bg-white/10 hover:text-on-surface transition-colors">{{TOPIC}}</span>
+</div>
+</section>
+<!-- Automation Settings -->
+<section class="glass-surface rounded-xl p-4 flex flex-col gap-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">bolt</span>
+<h2 class="font-h2 text-h2 text-on-surface">Automation</h2>
+</div>
+<!-- Toggles -->
+<div class="flex flex-col gap-4">
+<div class="flex justify-between items-center group">
+<span class="font-body-md text-body-md text-on-surface group-hover:text-white transition-colors">Auto-Like Posts</span>
+<input checked="" class="linear-toggle" type="checkbox"/>
+</div>
+<div class="flex justify-between items-center group">
+<span class="font-body-md text-body-md text-on-surface group-hover:text-white transition-colors">Auto-Comment</span>
+<input checked="" class="linear-toggle" type="checkbox"/>
+</div>
+<div class="flex justify-between items-center group">
+<div class="flex flex-col gap-0.5">
+<span class="font-body-md text-body-md text-on-surface group-hover:text-white transition-colors">Skip Commented</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">PREVENT DUPLICATES</span>
+</div>
+<input checked="" class="linear-toggle" type="checkbox"/>
+</div>
+</div>
+<div class="h-px w-full bg-white/5 my-1"></div>
+<!-- Number Inputs -->
+<div class="grid grid-cols-2 gap-4">
+<div class="flex flex-col gap-1.5">
+<label class="font-body-sm text-body-sm text-on-surface-variant">Window Mode</label>
+<div class="flex items-center gap-2">
+<input class="input-glass rounded-lg px-2 py-1.5 w-16 text-center font-mono text-mono" type="number" value="10"/>
+<span class="font-body-sm text-body-sm text-on-surface-variant">posts</span>
+</div>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="font-body-sm text-body-sm text-on-surface-variant">Action Delay</label>
+<div class="flex items-center gap-1.5">
+<input class="input-glass rounded-lg px-2 py-1.5 w-12 text-center font-mono text-mono" type="number" value="2"/>
+<span class="text-on-surface-variant/50">-</span>
+<input class="input-glass rounded-lg px-2 py-1.5 w-12 text-center font-mono text-mono" type="number" value="5"/>
+<span class="font-body-sm text-body-sm text-on-surface-variant ml-0.5">s</span>
+</div>
+</div>
+</div>
+</section>
+<div class="h-4"></div> <!-- Bottom spacing -->
+</main>
+<!-- Footer Actions -->
+<footer class="px-edge-margin py-4 bg-surface/90 backdrop-blur-xl border-t border-white/5 flex flex-col gap-3 sticky bottom-0 z-10">
+<button class="w-full btn-primary font-h2 text-h2 py-2.5 rounded-lg active:scale-[0.98] flex items-center justify-center gap-2">
+            Save Changes
+        </button>
+<button class="w-full bg-transparent text-on-surface-variant font-body-sm text-body-sm py-1.5 rounded-lg hover:text-on-surface transition-colors active:scale-98">
+            Reset to defaults
+        </button>
+</footer>
+</div>
+<script>
+    // Simple script to handle provider selection visuals
+    document.querySelectorAll('.provider-card').forEach(card => {
+        card.addEventListener('click', () => {
+            document.querySelectorAll('.provider-card').forEach(c => c.classList.remove('active'));
+            card.classList.add('active');
+        });
+    });
+</script>
+</body></html>

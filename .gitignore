@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Build / temp artifacts
+_build/
+_stitch_raw/
+_preview/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# Source design zip (already ported into the extension)
+stitch_yappilot_extension_interface.zip
+
+# Packaged builds
+*.crx
+*.pem
+dist/

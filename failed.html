@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>YapPilot — Failed Posts</title>
+<link rel="stylesheet" href="popup.css">
+</head>
+<body>
+<div class="panel">
+  <header class="topbar">
+    <div class="brand">
+      <button id="backBtn" class="icon-btn" title="Back"><svg viewBox="0 0 24 24"><path d="M20 11H7.8l5.6-5.6L12 4l-8 8 8 8 1.4-1.4L7.8 13H20v-2Z"/></svg></button>
+      <span class="topbar-title">Failed Posts</span>
+    </div>
+  </header>
+
+  <main class="main">
+    <section class="stat-hero is-error">
+      <span class="stat-icon"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm1 15h-2v-2h2v2Zm0-4h-2V7h2v6Z"/></svg></span>
+      <div class="stat-num" id="failedCount">0</div>
+      <div class="stat-label">Failed Posts</div>
+    </section>
+
+    <div class="action-grid cols-3">
+      <button id="exportBtn" class="action-btn hv-primary"><svg viewBox="0 0 24 24"><path d="M5 20h14v-2H5v2ZM19 9h-4V3H9v6H5l7 7 7-7Z"/></svg><span>Export</span></button>
+      <button id="retryAllBtn" class="action-btn is-hero"><svg viewBox="0 0 24 24"><path d="M17.6 6.4A8 8 0 1 0 19.7 14h-2.1A6 6 0 1 1 12 6c1.7 0 3.1.7 4.2 1.8L13 11h7V4l-2.4 2.4Z"/></svg><span>Retry All</span></button>
+      <button id="clearAllBtn" class="action-btn hv-error"><svg viewBox="0 0 24 24"><path d="M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6v12ZM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4Z"/></svg><span>Clear All</span></button>
+    </div>
+
+    <div class="list-head">
+      <h3>Recent Failures</h3>
+    </div>
+
+    <div id="failedList" class="result-list">
+      <div class="empty-state">
+        <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm-2 15-5-5 1.4-1.4L10 14.2l7.6-7.6L19 8l-9 9Z"/></svg>
+        No failed posts — clean run.
+      </div>
+    </div>
+  </main>
+</div>
+<script src="failed.js"></script>
+</body>
+</html>

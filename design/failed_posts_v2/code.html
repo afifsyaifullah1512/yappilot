@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>YapPilot - Failed Posts</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-variant": "#32353c",
+                        "surface-container": "#1d2026",
+                        "on-tertiary-fixed": "#410004",
+                        "secondary-container": "#00a572",
+                        "surface": "#10131a",
+                        "inverse-surface": "#e1e2eb",
+                        "background": "#10131a",
+                        "tertiary": "#ffb3ad",
+                        "on-surface-variant": "#c2c6d6",
+                        "error-container": "#93000a",
+                        "on-primary-fixed-variant": "#004395",
+                        "on-background": "#e1e2eb",
+                        "on-error": "#690005",
+                        "surface-container-high": "#272a31",
+                        "surface-container-low": "#191c22",
+                        "surface-tint": "#adc6ff",
+                        "surface-bright": "#363940",
+                        "on-primary-fixed": "#001a42",
+                        "on-primary": "#002e6a",
+                        "on-primary-container": "#00285d",
+                        "tertiary-container": "#ff5451",
+                        "on-tertiary": "#68000a",
+                        "on-surface": "#e1e2eb",
+                        "surface-dim": "#10131a",
+                        "primary": "#adc6ff",
+                        "primary-container": "#4d8eff",
+                        "primary-fixed": "#d8e2ff",
+                        "on-error-container": "#ffdad6",
+                        "on-secondary-container": "#00311f",
+                        "on-tertiary-fixed-variant": "#930013",
+                        "tertiary-fixed-dim": "#ffb3ad",
+                        "outline-variant": "#424754",
+                        "inverse-on-surface": "#2e3037",
+                        "secondary-fixed-dim": "#4edea3",
+                        "error": "#ffb4ab",
+                        "on-secondary-fixed-variant": "#005236",
+                        "on-tertiary-container": "#5c0008",
+                        "inverse-primary": "#005ac2",
+                        "surface-container-highest": "#32353c",
+                        "primary-fixed-dim": "#adc6ff",
+                        "on-secondary": "#003824",
+                        "surface-container-lowest": "#0b0e14",
+                        "tertiary-fixed": "#ffdad7",
+                        "secondary": "#4edea3",
+                        "on-secondary-fixed": "#002113",
+                        "outline": "#8c909f",
+                        "secondary-fixed": "#6ffbbe"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "edge-margin": "16px",
+                        "stack-gap": "12px",
+                        "panel-width": "420px",
+                        "item-padding": "8px 12px"
+                    },
+                    "fontFamily": {
+                        "h2": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "h1": ["Inter"],
+                        "mono": ["JetBrains Mono"],
+                        "body-md": ["Inter"],
+                        "body-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "h2": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "label-caps": ["11px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "h1": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "mono": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.surface-container-lowest');
+            color: theme('colors.on-surface');
+            width: theme('spacing.panel-width');
+            margin: 0 auto;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .glass-surface {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+        }
+
+        .btn-ghost {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.2s;
+        }
+        .btn-ghost:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.06);
+        }
+        
+        /* Custom scrollbar for panel */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="font-body-md bg-surface-container-lowest text-on-surface w-[420px] mx-auto min-h-screen flex flex-col relative overflow-x-hidden">
+<!-- Top Navigation (Task-focused context, generic Nav is suppressed as per rules, using custom header) -->
+<header class="flex justify-between items-center px-edge-margin h-16 w-full bg-surface-container-lowest/80 backdrop-blur-xl border-b border-white/5 sticky top-0 z-50">
+<div class="flex items-center gap-3">
+<button class="text-on-surface-variant hover:text-on-surface transition-colors active:scale-95 duration-200 p-2 -ml-2 rounded-lg">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="font-h1 text-h1 tracking-tight">Failed Posts</h1>
+</div>
+<button class="text-on-surface-variant hover:bg-white/5 transition-colors active:scale-95 duration-200 p-2 rounded-lg">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</header>
+<main class="flex-1 flex flex-col gap-stack-gap p-edge-margin pb-24">
+<!-- Big Red Stat Card -->
+<div class="glass-surface rounded-xl p-8 relative overflow-hidden flex flex-col items-center justify-center border-error/20 shadow-[0_12px_40px_-12px_rgba(255,180,171,0.15)]">
+<div class="absolute inset-0 bg-gradient-to-b from-error/5 to-transparent"></div>
+<div class="bg-error/10 p-4 rounded-full mb-4 z-10 border border-error/10 shadow-[0_0_24px_rgba(255,180,171,0.2)]">
+<span class="material-symbols-outlined text-error text-[28px]" data-icon="error" style="font-variation-settings: 'FILL' 0;">error</span>
+</div>
+<h2 class="font-h1 text-[40px] leading-none font-bold text-error tracking-tight z-10 mb-2">14</h2>
+<p class="font-label-caps text-label-caps text-error/80 uppercase tracking-[0.15em] z-10">Failed Uploads</p>
+</div>
+<!-- Action Row -->
+<div class="grid grid-cols-3 gap-3 mt-2">
+<button class="btn-ghost rounded-xl p-item-padding py-3 flex flex-col items-center justify-center gap-1.5 active:scale-95 hover:text-primary hover:border-primary/40">
+<span class="material-symbols-outlined text-[20px]" data-icon="download">download</span>
+<span class="font-label-caps text-label-caps">Export</span>
+</button>
+<button class="bg-primary-fixed text-on-primary-fixed rounded-xl p-item-padding py-3 flex flex-col items-center justify-center gap-1.5 active:scale-95 hover:opacity-90 shadow-[0_4px_16px_rgba(216,226,255,0.2)] transition-all hover:shadow-[0_4px_20px_rgba(216,226,255,0.3)] border border-white/20">
+<span class="material-symbols-outlined text-[20px]" data-icon="refresh">refresh</span>
+<span class="font-label-caps text-label-caps font-bold">Retry All</span>
+</button>
+<button class="btn-ghost rounded-xl p-item-padding py-3 flex flex-col items-center justify-center gap-1.5 active:scale-95 hover:text-error hover:border-error/40">
+<span class="material-symbols-outlined text-[20px]" data-icon="delete">delete</span>
+<span class="font-label-caps text-label-caps">Clear All</span>
+</button>
+</div>
+<!-- List Header -->
+<div class="flex items-center justify-between mt-6 mb-1 px-1">
+<h3 class="font-h2 text-h2 text-on-surface">Recent Failures</h3>
+<span class="font-label-caps text-label-caps bg-surface-container-highest/50 px-2.5 py-1 rounded-md text-on-surface-variant border border-white/5">LAST 24H</span>
+</div>
+<!-- Failed Posts List -->
+<div class="flex flex-col gap-3">
+<!-- Item 1 -->
+<div class="glass-surface rounded-xl p-4 flex gap-4 items-start group hover:border-primary/30 transition-colors relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-error/40 rounded-l-xl"></div>
+<div class="bg-error/10 text-error p-2.5 rounded-xl flex-shrink-0 mt-0.5 border border-error/10">
+<span class="material-symbols-outlined text-[20px]" data-icon="wifi_off">wifi_off</span>
+</div>
+<div class="flex-1 min-w-0 flex flex-col gap-1.5">
+<div class="flex items-center justify-between gap-2">
+<span class="font-label-caps text-label-caps bg-error/10 text-error px-2 py-0.5 rounded-md uppercase tracking-[0.08em] border border-error/10">Network Error</span>
+<span class="font-mono text-mono text-on-surface-variant/60">10:42 AM</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface/90 truncate mb-1">x.com/compose/post/tech-trends-2024</p>
+<div class="flex items-center">
+<button class="font-label-caps text-label-caps text-primary hover:text-primary-fixed hover:bg-primary/10 px-2 py-1 -ml-2 rounded-md active:scale-95 transition-all flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]" data-icon="replay">replay</span> RETRY
+                        </button>
+</div>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="glass-surface rounded-xl p-4 flex gap-4 items-start group hover:border-primary/30 transition-colors relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-error/40 rounded-l-xl"></div>
+<div class="bg-error/10 text-error p-2.5 rounded-xl flex-shrink-0 mt-0.5 border border-error/10">
+<span class="material-symbols-outlined text-[20px]" data-icon="block">block</span>
+</div>
+<div class="flex-1 min-w-0 flex flex-col gap-1.5">
+<div class="flex items-center justify-between gap-2">
+<span class="font-label-caps text-label-caps bg-error/10 text-error px-2 py-0.5 rounded-md uppercase tracking-[0.08em] border border-error/10">Rate Limited</span>
+<span class="font-mono text-mono text-on-surface-variant/60">09:15 AM</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface/90 truncate mb-1">linkedin.com/feed/update/marketing...</p>
+<div class="flex items-center">
+<button class="font-label-caps text-label-caps text-primary hover:text-primary-fixed hover:bg-primary/10 px-2 py-1 -ml-2 rounded-md active:scale-95 transition-all flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]" data-icon="replay">replay</span> RETRY
+                        </button>
+</div>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="glass-surface rounded-xl p-4 flex gap-4 items-start group hover:border-primary/30 transition-colors relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-error/40 rounded-l-xl"></div>
+<div class="bg-error/10 text-error p-2.5 rounded-xl flex-shrink-0 mt-0.5 border border-error/10">
+<span class="material-symbols-outlined text-[20px]" data-icon="image_not_supported">image_not_supported</span>
+</div>
+<div class="flex-1 min-w-0 flex flex-col gap-1.5">
+<div class="flex items-center justify-between gap-2">
+<span class="font-label-caps text-label-caps bg-error/10 text-error px-2 py-0.5 rounded-md uppercase tracking-[0.08em] border border-error/10">Media Rejected</span>
+<span class="font-mono text-mono text-on-surface-variant/60">Yesterday</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface/90 truncate mb-1">instagram.com/create/story/product...</p>
+<div class="flex items-center">
+<button class="font-label-caps text-label-caps text-primary-fixed hover:text-white hover:bg-primary/10 px-2 py-1 -ml-2 rounded-md active:scale-95 transition-all flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]" data-icon="edit">edit</span> EDIT POST
+                        </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>
