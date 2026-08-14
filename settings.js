@@ -145,6 +145,17 @@ function toggleProviderSections() {
 }
 
 // Validate License Key
+// Real device ID: unique per installation, persisted across sessions.
+// (chrome.runtime.id is the SAME for every install — useless as a device lock)
+async function getDeviceId() {
+    const stored = await chrome.storage.local.get('deviceId');
+    if (stored.deviceId) return stored.deviceId;
+
+    const id = (crypto.randomUUID ? crypto.randomUUID() : 'dev-' + Date.now() + '-' + Math.random().toString(36).slice(2, 10));
+    await chrome.storage.local.set({ deviceId: id });
+    return id;
+}
+
 async function validateLicenseKey() {
     const key = licenseKeyInput.value.trim();
 
@@ -157,7 +168,7 @@ async function validateLicenseKey() {
     validateKeyBtn.textContent = 'Validating...';
 
     try {
-        const deviceId = chrome.runtime.id;
+        const deviceId = await getDeviceId();
 
         const response = await fetch('https://auto-yap-api.vercel.app/api/exchange-key', {
             method: 'POST',
