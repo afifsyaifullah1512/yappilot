@@ -5,204 +5,222 @@
 <title>YapPilot — Settings</title>
 <link rel="stylesheet" href="popup.css">
 </head>
-<body>
-<div class="panel">
-  <header class="topbar">
+<body class="settings-page">
+
+<!-- CSS-only tab state (top-level so :checked ~ can reach shell) -->
+<input type="radio" name="settingsTab" id="tab-license" class="tab-radio" checked>
+<input type="radio" name="settingsTab" id="tab-ai" class="tab-radio">
+<input type="radio" name="settingsTab" id="tab-auto" class="tab-radio">
+
+<div class="settings-shell">
+
+  <!-- Wide header -->
+  <header class="settings-header">
     <div class="brand">
       <span class="brand-mark"><svg viewBox="0 0 24 24"><path d="M21.5 2.5 2.9 10.6c-.9.4-.8 1.6.1 1.9l5.2 1.6 1.6 5.2c.3.9 1.5 1 1.9.1l8.1-18.6c.4-.8-.5-1.7-1.3-1.3ZM9.4 12.6l8.3-6.9-6.9 8.3-1.4-1.4Z"/></svg></span>
       <div>
-        <h1>Settings</h1>
+        <h1>YapPilot Settings</h1>
         <p>Configure your autopilot</p>
       </div>
     </div>
+    <span class="chip chip-muted">v2.0.0</span>
   </header>
 
-  <!-- CSS-only tab state (radios live outside .main so :checked can drive panels) -->
-  <input type="radio" name="settingsTab" id="tab-license" class="tab-radio" checked>
-  <input type="radio" name="settingsTab" id="tab-ai" class="tab-radio">
-  <input type="radio" name="settingsTab" id="tab-auto" class="tab-radio">
+  <div class="settings-grid">
 
-  <nav class="tabbar">
-    <label for="tab-license" class="tab"><svg viewBox="0 0 24 24"><path d="M12.6 10A5.5 5.5 0 0 0 2 12a5.5 5.5 0 0 0 10.6 2H14l2 2 2-2 2 2 2-2-2-2h-7.4ZM7.5 15a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5Z"/></svg><span>License</span></label>
-    <label for="tab-ai" class="tab"><svg viewBox="0 0 24 24"><path d="M12 3a4 4 0 0 0-4 4c0 .3 0 .6.1.9A3.5 3.5 0 0 0 6 11c0 .9.3 1.7.9 2.3A3 3 0 0 0 6 15.5 3.5 3.5 0 0 0 9.5 19c.5 0 1-.1 1.5-.3V21h2v-2.3c.5.2 1 .3 1.5.3a3.5 3.5 0 0 0 3.5-3.5c0-.8-.3-1.6-.9-2.2.6-.6.9-1.4.9-2.3a3.5 3.5 0 0 0-2.1-3.1c.1-.3.1-.6.1-.9a4 4 0 0 0-4-4Z"/></svg><span>AI Engine</span></label>
-    <label for="tab-auto" class="tab"><svg viewBox="0 0 24 24"><path d="M11 21h-1l1-7H7.5c-.6 0-.6-.3-.4-.7L13 3h1l-1 7h3.5c.5 0 .6.3.4.7L11 21Z"/></svg><span>Automation</span></label>
-  </nav>
+    <!-- Left: vertical nav -->
+    <nav class="settings-side">
+      <label for="tab-license" class="side-tab"><svg viewBox="0 0 24 24"><path d="M12.6 10A5.5 5.5 0 0 0 2 12a5.5 5.5 0 0 0 10.6 2H14l2 2 2-2 2 2 2-2-2-2h-7.4ZM7.5 15a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5Z"/></svg><span>License</span></label>
+      <label for="tab-ai" class="side-tab"><svg viewBox="0 0 24 24"><path d="M12 3a4 4 0 0 0-4 4c0 .3 0 .6.1.9A3.5 3.5 0 0 0 6 11c0 .9.3 1.7.9 2.3A3 3 0 0 0 6 15.5 3.5 3.5 0 0 0 9.5 19c.5 0 1-.1 1.5-.3V21h2v-2.3c.5.2 1 .3 1.5.3a3.5 3.5 0 0 0 3.5-3.5c0-.8-.3-1.6-.9-2.2.6-.6.9-1.4.9-2.3a3.5 3.5 0 0 0-2.1-3.1c.1-.3.1-.6.1-.9a4 4 0 0 0-4-4Z"/></svg><span>AI Engine</span></label>
+      <label for="tab-auto" class="side-tab"><svg viewBox="0 0 24 24"><path d="M11 21h-1l1-7H7.5c-.6 0-.6-.3-.4-.7L13 3h1l-1 7h3.5c.5 0 .6.3.4.7L11 21Z"/></svg><span>Automation</span></label>
+      <div class="side-spacer"></div>
+      <p class="side-credit">Yapper Indo<br>YapPilot v2.0.0</p>
+    </nav>
 
-  <main class="main">
+    <!-- Right: content -->
+    <div class="settings-content">
 
-    <!-- ===== TAB: LICENSE ===== -->
-    <div class="tab-panel" data-tab="license">
-      <section class="card">
-        <div class="card-row">
-          <span class="card-title"><svg viewBox="0 0 24 24"><path d="M12.6 10A5.5 5.5 0 0 0 2 12a5.5 5.5 0 0 0 10.6 2H14l2 2 2-2 2 2 2-2-2-2h-7.4ZM7.5 15a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5Z"/></svg> License Key</span>
-          <span class="chip chip-error">Required</span>
+      <!-- ===== LICENSE ===== -->
+      <div class="tab-panel" data-tab="license">
+        <div class="panel-head">
+          <h2>License</h2>
+          <p>Activate YapPilot with your key.</p>
         </div>
-        <div class="row">
-          <input type="text" id="licenseKey" class="input-mono" placeholder="XAE-XXXX-XXXX-XXXX-XXXX" autocomplete="off" spellcheck="false">
-          <button id="validateKeyBtn" class="btn btn-ghost btn-sm"><svg viewBox="0 0 24 24"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2Z"/></svg> Validate</button>
-        </div>
-        <div id="keyStatus" class="status-message"></div>
-        <p class="field-hint">Get your key from the Discord bot: <code>/create-key</code></p>
-      </section>
-    </div>
-
-    <!-- ===== TAB: AI ENGINE ===== -->
-    <div class="tab-panel" data-tab="ai">
-      <section class="card">
-        <div class="card-row">
-          <span class="card-title"><svg viewBox="0 0 24 24"><path d="M12 3a4 4 0 0 0-4 4c0 .3 0 .6.1.9A3.5 3.5 0 0 0 6 11c0 .9.3 1.7.9 2.3A3 3 0 0 0 6 15.5 3.5 3.5 0 0 0 9.5 19c.5 0 1-.1 1.5-.3V21h2v-2.3c.5.2 1 .3 1.5.3a3.5 3.5 0 0 0 3.5-3.5c0-.8-.3-1.6-.9-2.2.6-.6.9-1.4.9-2.3a3.5 3.5 0 0 0-2.1-3.1c.1-.3.1-.6.1-.9a4 4 0 0 0-4-4Z"/></svg> AI Engine</span>
-        </div>
-        <div class="provider-grid">
-          <label class="provider-tile">
-            <input type="radio" name="aiProvider" value="groq" checked>
-            <span class="provider-check"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm-2 15-5-5 1.4-1.4L10 14.2l7.6-7.6L19 8l-9 9Z"/></svg></span>
-            <span class="provider-name">GROQ</span>
-            <span class="provider-sub">Fast &amp; Free</span>
-          </label>
-          <label class="provider-tile">
-            <input type="radio" name="aiProvider" value="gemini">
-            <span class="provider-check"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm-2 15-5-5 1.4-1.4L10 14.2l7.6-7.6L19 8l-9 9Z"/></svg></span>
-            <span class="provider-name">Gemini</span>
-            <span class="provider-sub">Google AI</span>
-          </label>
-          <label class="provider-tile">
-            <input type="radio" name="aiProvider" value="openrouter">
-            <span class="provider-check"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm-2 15-5-5 1.4-1.4L10 14.2l7.6-7.6L19 8l-9 9Z"/></svg></span>
-            <span class="provider-name">Router</span>
-            <span class="provider-sub">Multi-Model</span>
-          </label>
-        </div>
-
-        <div class="field" id="groqKeySection">
-          <span class="field-label">
-            GROQ API Key
-            <a href="https://console.groq.com" target="_blank" class="field-hint" style="display:inline-flex;align-items:center;gap:4px">Get key <svg viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7ZM14 3v2h3.6l-9.8 9.8 1.4 1.4L19 6.4V10h2V3h-7Z"/></svg></a>
-          </span>
-          <div class="with-affix">
-            <input type="password" id="groqApiKey" class="input-mono" placeholder="gsk_..." autocomplete="off" spellcheck="false">
-            <button type="button" id="toggleGroqKey" class="affix-btn" title="Show/hide"><svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.7 7.6 1 12c1.7 4.4 6 7.5 11 7.5s9.3-3.1 11-7.5c-1.7-4.4-6-7.5-11-7.5Zm0 12.5a5 5 0 1 1 0-10 5 5 0 0 1 0 10Zm0-8a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/></svg></button>
+        <section class="card">
+          <div class="card-row">
+            <span class="card-title"><svg viewBox="0 0 24 24"><path d="M12.6 10A5.5 5.5 0 0 0 2 12a5.5 5.5 0 0 0 10.6 2H14l2 2 2-2 2 2 2-2-2-2h-7.4ZM7.5 15a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5Z"/></svg> License Key</span>
+            <span class="chip chip-error">Required</span>
           </div>
-        </div>
-
-        <div class="field hidden" id="geminiKeySection">
-          <span class="field-label">
-            Gemini API Key
-            <a href="https://makersuite.google.com/app/apikey" target="_blank" class="field-hint" style="display:inline-flex;align-items:center;gap:4px">Get key <svg viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7ZM14 3v2h3.6l-9.8 9.8 1.4 1.4L19 6.4V10h2V3h-7Z"/></svg></a>
-          </span>
-          <div class="with-affix">
-            <input type="password" id="geminiApiKey" class="input-mono" placeholder="AIza..." autocomplete="off" spellcheck="false">
-            <button type="button" id="toggleGeminiKey" class="affix-btn" title="Show/hide"><svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.7 7.6 1 12c1.7 4.4 6 7.5 11 7.5s9.3-3.1 11-7.5c-1.7-4.4-6-7.5-11-7.5Zm0 12.5a5 5 0 1 1 0-10 5 5 0 0 1 0 10Zm0-8a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/></svg></button>
+          <div class="row">
+            <input type="text" id="licenseKey" class="input-mono" placeholder="XAE-XXXX-XXXX-XXXX-XXXX" autocomplete="off" spellcheck="false">
+            <button id="validateKeyBtn" class="btn btn-ghost btn-sm"><svg viewBox="0 0 24 24"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2Z"/></svg> Validate</button>
           </div>
-        </div>
+          <div id="keyStatus" class="status-message"></div>
+          <p class="field-hint">Get your key from the Discord bot: <code>/create-key</code></p>
+        </section>
+      </div>
 
-        <div class="field hidden" id="openrouterKeySection">
-          <span class="field-label">
-            OpenRouter API Key
-            <a href="https://openrouter.ai/keys" target="_blank" class="field-hint" style="display:inline-flex;align-items:center;gap:4px">Get key <svg viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7ZM14 3v2h3.6l-9.8 9.8 1.4 1.4L19 6.4V10h2V3h-7Z"/></svg></a>
-          </span>
-          <div class="with-affix">
-            <input type="password" id="openrouterApiKey" class="input-mono" placeholder="sk-or-..." autocomplete="off" spellcheck="false">
-            <button type="button" id="toggleOpenRouterKey" class="affix-btn" title="Show/hide"><svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.7 7.6 1 12c1.7 4.4 6 7.5 11 7.5s9.3-3.1 11-7.5c-1.7-4.4-6-7.5-11-7.5Zm0 12.5a5 5 0 1 1 0-10 5 5 0 0 1 0 10Zm0-8a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/></svg></button>
-          </div>
-          <label class="field-label" for="openrouterModel" style="margin-top:8px">Model</label>
-          <select id="openrouterModel">
-            <optgroup label="Free">
-              <option value="meta-llama/llama-4-maverick">Llama 4 Maverick (Recommended)</option>
-              <option value="meta-llama/llama-3.1-8b-instruct">Llama 3.1 8B</option>
-              <option value="google/gemma-2-9b-it">Gemma 2 9B</option>
-              <option value="mistralai/mistral-7b-instruct">Mistral 7B</option>
-            </optgroup>
-            <optgroup label="Premium">
-              <option value="anthropic/claude-3.5-sonnet">Claude 3.5 Sonnet</option>
-              <option value="openai/gpt-4-turbo">GPT-4 Turbo</option>
-              <option value="google/gemini-pro-1.5">Gemini Pro 1.5</option>
-              <option value="meta-llama/llama-3.3-70b-instruct">Llama 3.3 70B</option>
-            </optgroup>
-            <optgroup label="Specialized">
-              <option value="qwen/qwen-2.5-72b-instruct">Qwen 2.5 72B (Bahasa Indo)</option>
-              <option value="deepseek/deepseek-chat">DeepSeek Chat</option>
-            </optgroup>
-          </select>
+      <!-- ===== AI ENGINE ===== -->
+      <div class="tab-panel" data-tab="ai">
+        <div class="panel-head">
+          <h2>AI Engine</h2>
+          <p>Pick a provider and tune how replies are written.</p>
         </div>
-      </section>
+        <section class="card">
+          <div class="card-row"><span class="card-title"><svg viewBox="0 0 24 24"><path d="M12 3a4 4 0 0 0-4 4c0 .3 0 .6.1.9A3.5 3.5 0 0 0 6 11c0 .9.3 1.7.9 2.3A3 3 0 0 0 6 15.5 3.5 3.5 0 0 0 9.5 19c.5 0 1-.1 1.5-.3V21h2v-2.3c.5.2 1 .3 1.5.3a3.5 3.5 0 0 0 3.5-3.5c0-.8-.3-1.6-.9-2.2.6-.6.9-1.4.9-2.3a3.5 3.5 0 0 0-2.1-3.1c.1-.3.1-.6.1-.9a4 4 0 0 0-4-4Z"/></svg> Provider</span></div>
+          <div class="provider-grid">
+            <label class="provider-tile">
+              <input type="radio" name="aiProvider" value="groq" checked>
+              <span class="provider-check"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm-2 15-5-5 1.4-1.4L10 14.2l7.6-7.6L19 8l-9 9Z"/></svg></span>
+              <span class="provider-name">GROQ</span>
+              <span class="provider-sub">Fast &amp; Free</span>
+            </label>
+            <label class="provider-tile">
+              <input type="radio" name="aiProvider" value="gemini">
+              <span class="provider-check"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm-2 15-5-5 1.4-1.4L10 14.2l7.6-7.6L19 8l-9 9Z"/></svg></span>
+              <span class="provider-name">Gemini</span>
+              <span class="provider-sub">Google AI</span>
+            </label>
+            <label class="provider-tile">
+              <input type="radio" name="aiProvider" value="openrouter">
+              <span class="provider-check"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm-2 15-5-5 1.4-1.4L10 14.2l7.6-7.6L19 8l-9 9Z"/></svg></span>
+              <span class="provider-name">Router</span>
+              <span class="provider-sub">Multi-Model</span>
+            </label>
+          </div>
 
-      <section class="card">
-        <div class="card-row">
-          <span class="card-title"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6Zm2 16H8v-2h8v2Zm0-4H8v-2h8v2Zm-3-5V3.5L18.5 9H13Z"/></svg> Prompt Template</span>
-        </div>
-        <textarea id="promptTemplate" style="min-height:96px" placeholder="Write an engaging reply that adds value to this post..."></textarea>
-        <p class="field-hint">Controls how the AI writes each reply.</p>
-      </section>
-    </div>
-
-    <!-- ===== TAB: AUTOMATION ===== -->
-    <div class="tab-panel" data-tab="auto">
-      <section class="card">
-        <div class="card-row">
-          <span class="card-title"><svg viewBox="0 0 24 24"><path d="M11 21h-1l1-7H7.5c-.6 0-.6-.3-.4-.7L13 3h1l-1 7h3.5c.5 0 .6.3.4.7L11 21Z"/></svg> Actions</span>
-        </div>
-        <div>
-          <div class="toggle-row">
-            <span class="toggle-text"><b>Auto-Like Posts</b></span>
-            <input type="checkbox" id="enableLike" class="switch" checked>
-          </div>
-          <div class="toggle-row">
-            <span class="toggle-text"><b>Auto-Comment</b></span>
-            <input type="checkbox" id="enableComment" class="switch" checked>
-          </div>
-          <div class="toggle-row">
-            <span class="toggle-text">
-              <b>Skip Commented</b>
-              <small>Prevent duplicates</small>
+          <div class="field" id="groqKeySection">
+            <span class="field-label">
+              GROQ API Key
+              <a href="https://console.groq.com" target="_blank" class="field-hint" style="display:inline-flex;align-items:center;gap:4px">Get key <svg viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7ZM14 3v2h3.6l-9.8 9.8 1.4 1.4L19 6.4V10h2V3h-7Z"/></svg></a>
             </span>
-            <input type="checkbox" id="skipAlreadyCommented" class="switch" checked>
+            <div class="with-affix">
+              <input type="password" id="groqApiKey" class="input-mono" placeholder="gsk_..." autocomplete="off" spellcheck="false">
+              <button type="button" id="toggleGroqKey" class="affix-btn" title="Show/hide"><svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.7 7.6 1 12c1.7 4.4 6 7.5 11 7.5s9.3-3.1 11-7.5c-1.7-4.4-6-7.5-11-7.5Zm0 12.5a5 5 0 1 1 0-10 5 5 0 0 1 0 10Zm0-8a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/></svg></button>
+            </div>
           </div>
-        </div>
-      </section>
 
-      <section class="card">
-        <div class="card-row">
-          <span class="card-title">Timing &amp; Window</span>
-        </div>
-        <div class="field">
-          <label class="field-label" for="windowMode">Window Mode</label>
-          <select id="windowMode">
-            <option value="normal">Normal Tab</option>
-            <option value="auto-focus">Auto-Focus Window</option>
-            <option value="always-on-top">Always-On-Top</option>
-          </select>
-        </div>
-        <div class="num-grid">
-          <div class="num-field">
-            <label>Like → Comment</label>
-            <div class="num-inline">
-              <input type="number" id="likeToCommentMin" min="1" max="60" value="5">
-              <span class="num-sep">–</span>
-              <input type="number" id="likeToCommentMax" min="1" max="60" value="15">
-              <span class="num-unit">sec</span>
+          <div class="field hidden" id="geminiKeySection">
+            <span class="field-label">
+              Gemini API Key
+              <a href="https://makersuite.google.com/app/apikey" target="_blank" class="field-hint" style="display:inline-flex;align-items:center;gap:4px">Get key <svg viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7ZM14 3v2h3.6l-9.8 9.8 1.4 1.4L19 6.4V10h2V3h-7Z"/></svg></a>
+            </span>
+            <div class="with-affix">
+              <input type="password" id="geminiApiKey" class="input-mono" placeholder="AIza..." autocomplete="off" spellcheck="false">
+              <button type="button" id="toggleGeminiKey" class="affix-btn" title="Show/hide"><svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.7 7.6 1 12c1.7 4.4 6 7.5 11 7.5s9.3-3.1 11-7.5c-1.7-4.4-6-7.5-11-7.5Zm0 12.5a5 5 0 1 1 0-10 5 5 0 0 1 0 10Zm0-8a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/></svg></button>
             </div>
           </div>
-          <div class="num-field">
-            <label>Post Delay</label>
-            <div class="num-inline">
-              <input type="number" id="delayMin" min="1" max="300" value="3">
-              <span class="num-sep">–</span>
-              <input type="number" id="delayMax" min="1" max="300" value="200">
-              <span class="num-unit">sec</span>
+
+          <div class="field hidden" id="openrouterKeySection">
+            <span class="field-label">
+              OpenRouter API Key
+              <a href="https://openrouter.ai/keys" target="_blank" class="field-hint" style="display:inline-flex;align-items:center;gap:4px">Get key <svg viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7ZM14 3v2h3.6l-9.8 9.8 1.4 1.4L19 6.4V10h2V3h-7Z"/></svg></a>
+            </span>
+            <div class="with-affix">
+              <input type="password" id="openrouterApiKey" class="input-mono" placeholder="sk-or-..." autocomplete="off" spellcheck="false">
+              <button type="button" id="toggleOpenRouterKey" class="affix-btn" title="Show/hide"><svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.7 7.6 1 12c1.7 4.4 6 7.5 11 7.5s9.3-3.1 11-7.5c-1.7-4.4-6-7.5-11-7.5Zm0 12.5a5 5 0 1 1 0-10 5 5 0 0 1 0 10Zm0-8a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/></svg></button>
             </div>
+            <label class="field-label" for="openrouterModel" style="margin-top:8px">Model</label>
+            <select id="openrouterModel">
+              <optgroup label="Free">
+                <option value="meta-llama/llama-4-maverick">Llama 4 Maverick (Recommended)</option>
+                <option value="meta-llama/llama-3.1-8b-instruct">Llama 3.1 8B</option>
+                <option value="google/gemma-2-9b-it">Gemma 2 9B</option>
+                <option value="mistralai/mistral-7b-instruct">Mistral 7B</option>
+              </optgroup>
+              <optgroup label="Premium">
+                <option value="anthropic/claude-3.5-sonnet">Claude 3.5 Sonnet</option>
+                <option value="openai/gpt-4-turbo">GPT-4 Turbo</option>
+                <option value="google/gemini-pro-1.5">Gemini Pro 1.5</option>
+                <option value="meta-llama/llama-3.3-70b-instruct">Llama 3.3 70B</option>
+              </optgroup>
+              <optgroup label="Specialized">
+                <option value="qwen/qwen-2.5-72b-instruct">Qwen 2.5 72B (Bahasa Indo)</option>
+                <option value="deepseek/deepseek-chat">DeepSeek Chat</option>
+              </optgroup>
+            </select>
           </div>
+        </section>
+
+        <section class="card">
+          <div class="card-row"><span class="card-title"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6Zm2 16H8v-2h8v2Zm0-4H8v-2h8v2Zm-3-5V3.5L18.5 9H13Z"/></svg> Prompt Template</span></div>
+          <textarea id="promptTemplate" style="min-height:120px" placeholder="Write an engaging reply that adds value to this post..."></textarea>
+          <p class="field-hint">Controls how the AI writes each reply.</p>
+        </section>
+      </div>
+
+      <!-- ===== AUTOMATION ===== -->
+      <div class="tab-panel" data-tab="auto">
+        <div class="panel-head">
+          <h2>Automation</h2>
+          <p>Control what runs and how fast.</p>
         </div>
-      </section>
+        <div class="card-columns">
+          <section class="card">
+            <div class="card-row"><span class="card-title"><svg viewBox="0 0 24 24"><path d="M11 21h-1l1-7H7.5c-.6 0-.6-.3-.4-.7L13 3h1l-1 7h3.5c.5 0 .6.3.4.7L11 21Z"/></svg> Actions</span></div>
+            <div>
+              <div class="toggle-row">
+                <span class="toggle-text"><b>Auto-Like Posts</b></span>
+                <input type="checkbox" id="enableLike" class="switch" checked>
+              </div>
+              <div class="toggle-row">
+                <span class="toggle-text"><b>Auto-Comment</b></span>
+                <input type="checkbox" id="enableComment" class="switch" checked>
+              </div>
+              <div class="toggle-row">
+                <span class="toggle-text">
+                  <b>Skip Commented</b>
+                  <small>Prevent duplicates</small>
+                </span>
+                <input type="checkbox" id="skipAlreadyCommented" class="switch" checked>
+              </div>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="card-row"><span class="card-title">Timing &amp; Window</span></div>
+            <div class="field">
+              <label class="field-label" for="windowMode">Window Mode</label>
+              <select id="windowMode">
+                <option value="normal">Normal Tab</option>
+                <option value="auto-focus">Auto-Focus Window</option>
+                <option value="always-on-top">Always-On-Top</option>
+              </select>
+            </div>
+            <div class="num-grid">
+              <div class="num-field">
+                <label>Like → Comment</label>
+                <div class="num-inline">
+                  <input type="number" id="likeToCommentMin" min="1" max="60" value="5">
+                  <span class="num-sep">–</span>
+                  <input type="number" id="likeToCommentMax" min="1" max="60" value="15">
+                  <span class="num-unit">sec</span>
+                </div>
+              </div>
+              <div class="num-field">
+                <label>Post Delay</label>
+                <div class="num-inline">
+                  <input type="number" id="delayMin" min="1" max="300" value="3">
+                  <span class="num-sep">–</span>
+                  <input type="number" id="delayMax" min="1" max="300" value="200">
+                  <span class="num-unit">sec</span>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <div id="saveMessage" class="save-message hidden"></div>
+
+      <!-- Save bar -->
+      <div class="settings-footer">
+        <button id="resetBtn" class="link-btn">Reset to defaults</button>
+        <button id="saveBtn" class="btn btn-success"><svg viewBox="0 0 24 24"><path d="M17 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7l-4-4Zm-5 16a3 3 0 1 1 0-6 3 3 0 0 1 0 6Zm3-10H7V5h8v4Z"/></svg> Save Settings</button>
+      </div>
+
     </div>
-
-    <div id="saveMessage" class="save-message hidden"></div>
-  </main>
-
-  <footer class="footer-actions">
-    <button id="saveBtn" class="btn btn-success btn-block"><svg viewBox="0 0 24 24"><path d="M17 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7l-4-4Zm-5 16a3 3 0 1 1 0-6 3 3 0 0 1 0 6Zm3-10H7V5h8v4Z"/></svg> Save Settings</button>
-    <button id="resetBtn" class="link-btn">Reset to defaults</button>
-    <p class="credit">Yapper Indo · v2.0.0</p>
-  </footer>
+  </div>
 </div>
 <script src="settings.js"></script>
 </body>
