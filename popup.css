@@ -707,6 +707,7 @@ select option, select optgroup { background: var(--sc-high); color: var(--on-sur
   padding: 2px 6px;
   color: var(--on-surface);
 }
+.field-hint svg { width: 12px; height: 12px; fill: currentColor; display: inline-block; vertical-align: -1px; margin-right: 2px; }
 
 .input-mono { font-family: var(--mono); font-size: 12px; }
 
@@ -728,7 +729,8 @@ select option, select optgroup { background: var(--sc-high); color: var(--on-sur
 .affix-btn.revealed { color: var(--primary); }
 
 /* Provider tiles */
-.provider-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.provider-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+@media (max-width: 560px) { .provider-grid { grid-template-columns: repeat(2, 1fr); } }
 
 .provider-tile {
   position: relative;

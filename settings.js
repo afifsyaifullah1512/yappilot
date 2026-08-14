@@ -14,6 +14,12 @@ const groqApiKeyInput = document.getElementById('groqApiKey');
 const geminiApiKeyInput = document.getElementById('geminiApiKey');
 const openrouterApiKeyInput = document.getElementById('openrouterApiKey');
 const openrouterModelSelect = document.getElementById('openrouterModel');
+const groqModelSelect = document.getElementById('groqModel');
+const geminiModelSelect = document.getElementById('geminiModel');
+const customKeySection = document.getElementById('customKeySection');
+const customEndpointUrlInput = document.getElementById('customEndpointUrl');
+const customApiKeyInput = document.getElementById('customApiKey');
+const customModelInput = document.getElementById('customModel');
 
 // Settings
 const promptTemplateInput = document.getElementById('promptTemplate');
@@ -37,7 +43,12 @@ const DEFAULT_SETTINGS = {
     groqApiKey: '',
     geminiApiKey: '',
     openrouterApiKey: '',
-    openrouterModel: 'meta-llama/llama-4-maverick',
+    openrouterModel: 'meta-llama/llama-3.3-70b-instruct:free',
+    groqModel: 'llama-3.3-70b-versatile',
+    geminiModel: 'gemini-2.5-flash',
+    customEndpointUrl: '',
+    customApiKey: '',
+    customModel: '',
     promptTemplate: 'You are a helpful community member. Reply to this post in a friendly and supportive way. Keep it short and genuine.',
     enableLike: true,
     enableComment: true,
@@ -70,6 +81,7 @@ function setupEventListeners() {
     document.getElementById('toggleGroqKey')?.addEventListener('click', () => togglePasswordVisibility('groqApiKey', 'toggleGroqKey'));
     document.getElementById('toggleGeminiKey')?.addEventListener('click', () => togglePasswordVisibility('geminiApiKey', 'toggleGeminiKey'));
     document.getElementById('toggleOpenRouterKey')?.addEventListener('click', () => togglePasswordVisibility('openrouterApiKey', 'toggleOpenRouterKey'));
+    document.getElementById('toggleCustomKey')?.addEventListener('click', () => togglePasswordVisibility('customApiKey', 'toggleCustomKey'));
 }
 
 // Toggle Password Visibility
@@ -93,6 +105,7 @@ function toggleProviderSections() {
     groqKeySection.classList.add('hidden');
     geminiKeySection.classList.add('hidden');
     openrouterKeySection.classList.add('hidden');
+    customKeySection.classList.add('hidden');
 
     if (selectedProvider === 'groq') {
         groqKeySection.classList.remove('hidden');
@@ -100,6 +113,8 @@ function toggleProviderSections() {
         geminiKeySection.classList.remove('hidden');
     } else if (selectedProvider === 'openrouter') {
         openrouterKeySection.classList.remove('hidden');
+    } else if (selectedProvider === 'custom') {
+        customKeySection.classList.remove('hidden');
     }
 }
 
@@ -154,7 +169,8 @@ function showKeyStatus(message, type) {
 async function loadSettings() {
     const settings = await chrome.storage.local.get([
         'licenseKey', 'aiProvider', 'groqApiKey', 'geminiApiKey', 'openrouterApiKey',
-        'openrouterModel', 'promptTemplate', 'enableLike', 'enableComment',
+        'openrouterModel', 'groqModel', 'geminiModel', 'customEndpointUrl', 'customApiKey',
+        'customModel', 'promptTemplate', 'enableLike', 'enableComment',
         'skipAlreadyCommented', 'windowMode', 'likeToCommentMin', 'likeToCommentMax',
         'delayMin', 'delayMax'
     ]);
@@ -168,6 +184,11 @@ async function loadSettings() {
     geminiApiKeyInput.value = settings.geminiApiKey || '';
     openrouterApiKeyInput.value = settings.openrouterApiKey || '';
     openrouterModelSelect.value = settings.openrouterModel || DEFAULT_SETTINGS.openrouterModel;
+    groqModelSelect.value = settings.groqModel || DEFAULT_SETTINGS.groqModel;
+    geminiModelSelect.value = settings.geminiModel || DEFAULT_SETTINGS.geminiModel;
+    customEndpointUrlInput.value = settings.customEndpointUrl || '';
+    customApiKeyInput.value = settings.customApiKey || '';
+    customModelInput.value = settings.customModel || '';
 
     promptTemplateInput.value = settings.promptTemplate || DEFAULT_SETTINGS.promptTemplate;
     enableLikeCheckbox.checked = settings.enableLike !== undefined ? settings.enableLike : DEFAULT_SETTINGS.enableLike;
@@ -211,6 +232,21 @@ async function saveSettings() {
     } else if (selectedProvider === 'openrouter' && !settings.openrouterApiKey) {
         showMessage('error', '❌ OpenRouter API key is required');
         return;
+    } else if (selectedProvider === 'custom') {
+        if (!settings.customEndpointUrl) {
+            showMessage('error', '❌ Custom endpoint URL is required');
+            return;
+        }
+        try {
+            new URL(settings.customEndpointUrl);
+        } catch {
+            showMessage('error', '❌ Endpoint URL is not a valid URL (must start with http:// or https://)');
+            return;
+        }
+        if (!settings.customModel) {
+            showMessage('error', '❌ Custom model name is required');
+            return;
+        }
     }
 
     try {
