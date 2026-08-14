@@ -729,7 +729,7 @@ select option, select optgroup { background: var(--sc-high); color: var(--on-sur
 .affix-btn.revealed { color: var(--primary); }
 
 /* Provider tiles */
-.provider-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.provider-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
 @media (max-width: 560px) { .provider-grid { grid-template-columns: repeat(2, 1fr); } }
 
 .provider-tile {

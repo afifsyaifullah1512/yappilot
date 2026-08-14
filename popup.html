@@ -47,13 +47,16 @@
     <section class="card hidden" id="aiSwitcher">
       <div class="card-row">
         <span class="card-title">Active Model</span>
-        <span class="chip chip-primary" id="currentModelDisplay">GROQ</span>
+        <span class="chip chip-primary" id="currentModelDisplay">Gemini</span>
       </div>
       <div class="row">
         <select id="aiProviderSwitch">
-          <option value="groq">GROQ (Llama)</option>
+          <option value="openai">OpenAI</option>
+          <option value="claude">Claude</option>
+          <option value="grok">Grok</option>
+          <option value="deepseek">DeepSeek</option>
           <option value="gemini">Gemini</option>
-          <option value="openrouter">OpenRouter</option>
+          <option value="custom">Custom</option>
         </select>
         <button id="switchAIBtn" class="btn btn-ghost btn-sm">Switch</button>
       </div>

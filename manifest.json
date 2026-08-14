@@ -14,7 +14,14 @@
     "host_permissions": [
         "*://x.com/*",
         "*://twitter.com/*",
-        "https://auto-yap-api.vercel.app/*"
+        "https://auto-yap-api.vercel.app/*",
+        "https://api.openai.com/*",
+        "https://api.anthropic.com/*",
+        "https://api.x.ai/*",
+        "https://api.deepseek.com/*",
+        "https://generativelanguage.googleapis.com/*",
+        "http://localhost/*",
+        "http://127.0.0.1/*"
     ],
     "action": {
         "default_popup": "popup.html",

@@ -60,14 +60,20 @@ async function startAutomation(urls) {
 
     // Load settings
     const settings = await chrome.storage.local.get([
-        'groqApiKey', 'geminiApiKey', 'openrouterApiKey', 'openrouterModel',
-        'groqModel', 'geminiModel', 'customEndpointUrl', 'customApiKey', 'customModel',
-        'aiProvider', 'promptTemplate', 'enableLike', 'enableComment',
+        'aiProvider',
+        'openaiApiKey', 'openaiModel',
+        'claudeApiKey', 'claudeModel',
+        'grokApiKey', 'grokModel',
+        'deepseekApiKey', 'deepseekModel',
+        'geminiApiKey', 'geminiModel',
+        'customEndpointUrl', 'customApiKey', 'customModel',
+        'promptTemplate', 'enableLike', 'enableComment',
         'delayMin', 'delayMax', 'likeToCommentMin', 'likeToCommentMax',
         'windowMode', 'skipAlreadyCommented'
     ]);
 
-    if (!settings.groqApiKey && !settings.geminiApiKey && !settings.openrouterApiKey && !settings.customEndpointUrl) {
+    if (!settings.openaiApiKey && !settings.claudeApiKey && !settings.grokApiKey &&
+        !settings.deepseekApiKey && !settings.geminiApiKey && !settings.customEndpointUrl) {
         sendLog('error', 'Please configure at least one AI provider in settings');
         return;
     }
@@ -76,11 +82,20 @@ async function startAutomation(urls) {
     automationState.urls = urls;
     automationState.currentIndex = 0;
     automationState.settings = {
-        groqApiKey: settings.groqApiKey || '',
+        openaiApiKey: settings.openaiApiKey || '',
+        openaiModel: settings.openaiModel || 'gpt-5.1',
+        claudeApiKey: settings.claudeApiKey || '',
+        claudeModel: settings.claudeModel || 'claude-sonnet-4-5',
+        grokApiKey: settings.grokApiKey || '',
+        grokModel: settings.grokModel || 'grok-4.1',
+        deepseekApiKey: settings.deepseekApiKey || '',
+        deepseekModel: settings.deepseekModel || 'deepseek-chat',
         geminiApiKey: settings.geminiApiKey || '',
-        openrouterApiKey: settings.openrouterApiKey || '',
-        openrouterModel: settings.openrouterModel || 'meta-llama/llama-4-maverick',
-        aiProvider: settings.aiProvider || 'groq',
+        geminiModel: settings.geminiModel || 'gemini-2.5-flash',
+        customEndpointUrl: settings.customEndpointUrl || '',
+        customApiKey: settings.customApiKey || '',
+        customModel: settings.customModel || '',
+        aiProvider: settings.aiProvider || 'gemini',
         promptTemplate: settings.promptTemplate || 'You are a helpful community member. Reply to this post in a friendly and supportive way. Keep it short and genuine.',
         enableLike: settings.enableLike !== false,
         enableComment: settings.enableComment !== false,
@@ -97,12 +112,17 @@ async function startAutomation(urls) {
     // Start keep-alive
     startKeepAlive();
 
-    const aiModel = {
-        openrouter: automationState.settings.openrouterModel,
-        groq: automationState.settings.groqModel,
+    const modelByProvider = {
+        openai: automationState.settings.openaiModel,
+        claude: automationState.settings.claudeModel,
+        grok: automationState.settings.grokModel,
+        deepseek: automationState.settings.deepseekModel,
         gemini: automationState.settings.geminiModel,
-        custom: `Custom: ${automationState.settings.customModel}`
-    }[automationState.settings.aiProvider] || automationState.settings.aiProvider.toUpperCase();
+        custom: automationState.settings.customModel
+    };
+    const aiModel = automationState.settings.aiProvider === 'custom'
+        ? `Custom: ${automationState.settings.customModel}`
+        : modelByProvider[automationState.settings.aiProvider] || automationState.settings.aiProvider;
     sendLog('success', `🚀 Starting automation with ${urls.length} posts using ${aiModel}`);
     sendStatus('Running');
 
@@ -156,27 +176,44 @@ async function switchAIProvider(provider, apiKey, model) {
 
     automationState.settings.aiProvider = provider;
 
-    if (provider === 'groq') {
-        automationState.settings.groqApiKey = apiKey;
+    if (provider === 'openai') {
+        automationState.settings.openaiApiKey = apiKey;
+        if (model) automationState.settings.openaiModel = model;
+    } else if (provider === 'claude') {
+        automationState.settings.claudeApiKey = apiKey;
+        if (model) automationState.settings.claudeModel = model;
+    } else if (provider === 'grok') {
+        automationState.settings.grokApiKey = apiKey;
+        if (model) automationState.settings.grokModel = model;
+    } else if (provider === 'deepseek') {
+        automationState.settings.deepseekApiKey = apiKey;
+        if (model) automationState.settings.deepseekModel = model;
     } else if (provider === 'gemini') {
         automationState.settings.geminiApiKey = apiKey;
-    } else if (provider === 'openrouter') {
-        automationState.settings.openrouterApiKey = apiKey;
-        automationState.settings.openrouterModel = model || 'meta-llama/llama-3.3-70b-instruct:free';
+        if (model) automationState.settings.geminiModel = model;
     } else if (provider === 'custom') {
-        automationState.settings.customEndpointUrl = apiKey;   // apiKey slot carries endpoint url here
-        automationState.settings.customModel = model || automationState.settings.customModel;
+        automationState.settings.customEndpointUrl = apiKey;   // apiKey slot carries endpoint url from popup
+        if (model) automationState.settings.customModel = model;
     }
 
     await chrome.storage.local.set({
         aiProvider: provider,
-        groqApiKey: automationState.settings.groqApiKey,
+        openaiApiKey: automationState.settings.openaiApiKey,
+        openaiModel: automationState.settings.openaiModel,
+        claudeApiKey: automationState.settings.claudeApiKey,
+        claudeModel: automationState.settings.claudeModel,
+        grokApiKey: automationState.settings.grokApiKey,
+        grokModel: automationState.settings.grokModel,
+        deepseekApiKey: automationState.settings.deepseekApiKey,
+        deepseekModel: automationState.settings.deepseekModel,
         geminiApiKey: automationState.settings.geminiApiKey,
-        openrouterApiKey: automationState.settings.openrouterApiKey,
-        openrouterModel: automationState.settings.openrouterModel
+        geminiModel: automationState.settings.geminiModel,
+        customEndpointUrl: automationState.settings.customEndpointUrl,
+        customApiKey: automationState.settings.customApiKey,
+        customModel: automationState.settings.customModel
     });
 
-    const modelName = provider === 'openrouter' ? model : provider.toUpperCase();
+    const modelName = (model || provider);
     sendLog('success', `✅ Switched to ${modelName}`);
 }
 
@@ -777,12 +814,16 @@ async function generateReply(postContent) {
     const prompt = automationState.settings.promptTemplate;
 
     try {
-        if (provider === 'groq') {
-            return await generateWithGroq(postContent, prompt);
+        if (provider === 'openai') {
+            return await generateWithOpenAI(postContent, prompt);
+        } else if (provider === 'claude') {
+            return await generateWithClaude(postContent, prompt);
+        } else if (provider === 'grok') {
+            return await generateWithGrok(postContent, prompt);
+        } else if (provider === 'deepseek') {
+            return await generateWithDeepSeek(postContent, prompt);
         } else if (provider === 'gemini') {
             return await generateWithGemini(postContent, prompt);
-        } else if (provider === 'openrouter') {
-            return await generateWithOpenRouter(postContent, prompt);
         } else if (provider === 'custom') {
             return await generateWithCustom(postContent, prompt);
         }
@@ -792,15 +833,15 @@ async function generateReply(postContent) {
     }
 }
 
-async function generateWithGroq(postContent, prompt) {
-    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+async function generateWithOpenAI(postContent, prompt) {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
-            'Authorization': `Bearer ${automationState.settings.groqApiKey}`,
+            'Authorization': `Bearer ${automationState.settings.openaiApiKey}`,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            model: automationState.settings.groqModel,
+            model: automationState.settings.openaiModel,
             messages: [
                 { role: 'system', content: prompt },
                 { role: 'user', content: postContent }
@@ -810,6 +851,78 @@ async function generateWithGroq(postContent, prompt) {
         })
     });
 
+    if (!response.ok) throw new Error(`OpenAI ${response.status}: ${(await response.text()).slice(0, 120)}`);
+    const data = await response.json();
+    return data.choices[0].message.content.trim();
+}
+
+async function generateWithClaude(postContent, prompt) {
+    // Anthropic Messages API
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+            'x-api-key': automationState.settings.claudeApiKey,
+            'anthropic-version': '2023-06-01',
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            model: automationState.settings.claudeModel,
+            max_tokens: 280,
+            temperature: 0.7,
+            system: prompt,
+            messages: [
+                { role: 'user', content: postContent }
+            ]
+        })
+    });
+
+    if (!response.ok) throw new Error(`Claude ${response.status}: ${(await response.text()).slice(0, 120)}`);
+    const data = await response.json();
+    return data.content[0].text.trim();
+}
+
+async function generateWithGrok(postContent, prompt) {
+    const response = await fetch('https://api.x.ai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${automationState.settings.grokApiKey}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            model: automationState.settings.grokModel,
+            messages: [
+                { role: 'system', content: prompt },
+                { role: 'user', content: postContent }
+            ],
+            temperature: 0.7,
+            max_tokens: 280
+        })
+    });
+
+    if (!response.ok) throw new Error(`Grok ${response.status}: ${(await response.text()).slice(0, 120)}`);
+    const data = await response.json();
+    return data.choices[0].message.content.trim();
+}
+
+async function generateWithDeepSeek(postContent, prompt) {
+    const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${automationState.settings.deepseekApiKey}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            model: automationState.settings.deepseekModel,
+            messages: [
+                { role: 'system', content: prompt },
+                { role: 'user', content: postContent }
+            ],
+            temperature: 0.7,
+            max_tokens: 280
+        })
+    });
+
+    if (!response.ok) throw new Error(`DeepSeek ${response.status}: ${(await response.text()).slice(0, 120)}`);
     const data = await response.json();
     return data.choices[0].message.content.trim();
 }
@@ -830,32 +943,10 @@ async function generateWithGemini(postContent, prompt) {
         })
     });
 
+    if (!response.ok) throw new Error(`Gemini ${response.status}: ${(await response.text()).slice(0, 120)}`);
     const data = await response.json();
     return data.candidates[0].content.parts[0].text.trim();
 }
-
-async function generateWithOpenRouter(postContent, prompt) {
-    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${automationState.settings.openrouterApiKey}`,
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            model: automationState.settings.openrouterModel,
-            messages: [
-                { role: 'system', content: prompt },
-                { role: 'user', content: postContent }
-            ],
-            temperature: 0.7,
-            max_tokens: 280
-        })
-    });
-
-    const data = await response.json();
-    return data.choices[0].message.content.trim();
-}
-
 
 async function generateWithCustom(postContent, prompt) {
     const url = automationState.settings.customEndpointUrl;

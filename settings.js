@@ -7,19 +7,38 @@ const keyStatus = document.getElementById('keyStatus');
 
 // AI Provider
 const aiProviderRadios = document.getElementsByName('aiProvider');
-const groqKeySection = document.getElementById('groqKeySection');
-const geminiKeySection = document.getElementById('geminiKeySection');
-const openrouterKeySection = document.getElementById('openrouterKeySection');
-const groqApiKeyInput = document.getElementById('groqApiKey');
-const geminiApiKeyInput = document.getElementById('geminiApiKey');
-const openrouterApiKeyInput = document.getElementById('openrouterApiKey');
-const openrouterModelSelect = document.getElementById('openrouterModel');
-const groqModelSelect = document.getElementById('groqModel');
-const geminiModelSelect = document.getElementById('geminiModel');
-const customKeySection = document.getElementById('customKeySection');
+
+const PROVIDERS = ['openai', 'claude', 'grok', 'deepseek', 'gemini', 'custom'];
+
+const keyInputs = {
+    openai: document.getElementById('openaiApiKey'),
+    claude: document.getElementById('claudeApiKey'),
+    grok: document.getElementById('grokApiKey'),
+    deepseek: document.getElementById('deepseekApiKey'),
+    gemini: document.getElementById('geminiApiKey'),
+    custom: document.getElementById('customApiKey')
+};
+const modelInputs = {
+    openai: document.getElementById('openaiModel'),
+    claude: document.getElementById('claudeModel'),
+    grok: document.getElementById('grokModel'),
+    deepseek: document.getElementById('deepseekModel'),
+    gemini: document.getElementById('geminiModel')
+};
+const sections = {};
+PROVIDERS.forEach(p => { sections[p] = document.getElementById(p + 'KeySection'); });
+
 const customEndpointUrlInput = document.getElementById('customEndpointUrl');
-const customApiKeyInput = document.getElementById('customApiKey');
 const customModelInput = document.getElementById('customModel');
+
+// Model suggestions (datalist) — shortcuts only; free-text allowed
+const MODEL_SUGGESTIONS = {
+    openai: ['gpt-5.1', 'gpt-5.1-mini', 'gpt-5.1-nano', 'gpt-5', 'gpt-5-mini', 'gpt-4o', 'gpt-4o-mini'],
+    claude: ['claude-sonnet-4-5', 'claude-opus-4-5', 'claude-haiku-4-5', 'claude-opus-4-1', 'claude-sonnet-4'],
+    grok: ['grok-4.1', 'grok-4', 'grok-3-mini', 'grok-3'],
+    deepseek: ['deepseek-chat', 'deepseek-reasoner'],
+    gemini: ['gemini-2.5-flash', 'gemini-2.5-pro', 'gemini-2.5-flash-lite', 'gemini-2.0-flash']
+};
 
 // Settings
 const promptTemplateInput = document.getElementById('promptTemplate');
@@ -39,12 +58,16 @@ const saveMessage = document.getElementById('saveMessage');
 
 // Default Settings
 const DEFAULT_SETTINGS = {
-    aiProvider: 'groq',
-    groqApiKey: '',
+    aiProvider: 'gemini',
+    openaiApiKey: '',
+    claudeApiKey: '',
+    grokApiKey: '',
+    deepseekApiKey: '',
     geminiApiKey: '',
-    openrouterApiKey: '',
-    openrouterModel: 'meta-llama/llama-3.3-70b-instruct:free',
-    groqModel: 'llama-3.3-70b-versatile',
+    openaiModel: 'gpt-5.1',
+    claudeModel: 'claude-sonnet-4-5',
+    grokModel: 'grok-4.1',
+    deepseekModel: 'deepseek-chat',
     geminiModel: 'gemini-2.5-flash',
     customEndpointUrl: '',
     customApiKey: '',
@@ -62,10 +85,20 @@ const DEFAULT_SETTINGS = {
 
 // Initialize
 document.addEventListener('DOMContentLoaded', async () => {
+    fillDatalists();
     await loadSettings();
     setupEventListeners();
     toggleProviderSections();
 });
+
+// Fill datalist suggestions
+function fillDatalists() {
+    Object.entries(MODEL_SUGGESTIONS).forEach(([p, models]) => {
+        const dl = document.getElementById(p + 'Models');
+        if (!dl) return;
+        dl.innerHTML = models.map(m => `<option value="${m}"></option>`).join('');
+    });
+}
 
 // Event Listeners
 function setupEventListeners() {
@@ -78,9 +111,11 @@ function setupEventListeners() {
     });
 
     // API Key visibility toggles
-    document.getElementById('toggleGroqKey')?.addEventListener('click', () => togglePasswordVisibility('groqApiKey', 'toggleGroqKey'));
+    document.getElementById('toggleOpenaiKey')?.addEventListener('click', () => togglePasswordVisibility('openaiApiKey', 'toggleOpenaiKey'));
+    document.getElementById('toggleClaudeKey')?.addEventListener('click', () => togglePasswordVisibility('claudeApiKey', 'toggleClaudeKey'));
+    document.getElementById('toggleGrokKey')?.addEventListener('click', () => togglePasswordVisibility('grokApiKey', 'toggleGrokKey'));
+    document.getElementById('toggleDeepseekKey')?.addEventListener('click', () => togglePasswordVisibility('deepseekApiKey', 'toggleDeepseekKey'));
     document.getElementById('toggleGeminiKey')?.addEventListener('click', () => togglePasswordVisibility('geminiApiKey', 'toggleGeminiKey'));
-    document.getElementById('toggleOpenRouterKey')?.addEventListener('click', () => togglePasswordVisibility('openrouterApiKey', 'toggleOpenRouterKey'));
     document.getElementById('toggleCustomKey')?.addEventListener('click', () => togglePasswordVisibility('customApiKey', 'toggleCustomKey'));
 }
 
@@ -102,20 +137,11 @@ function togglePasswordVisibility(inputId, buttonId) {
 function toggleProviderSections() {
     const selectedProvider = document.querySelector('input[name="aiProvider"]:checked').value;
 
-    groqKeySection.classList.add('hidden');
-    geminiKeySection.classList.add('hidden');
-    openrouterKeySection.classList.add('hidden');
-    customKeySection.classList.add('hidden');
+    PROVIDERS.forEach(p => {
+        if (sections[p]) sections[p].classList.add('hidden');
+    });
 
-    if (selectedProvider === 'groq') {
-        groqKeySection.classList.remove('hidden');
-    } else if (selectedProvider === 'gemini') {
-        geminiKeySection.classList.remove('hidden');
-    } else if (selectedProvider === 'openrouter') {
-        openrouterKeySection.classList.remove('hidden');
-    } else if (selectedProvider === 'custom') {
-        customKeySection.classList.remove('hidden');
-    }
+    if (sections[selectedProvider]) sections[selectedProvider].classList.remove('hidden');
 }
 
 // Validate License Key
@@ -167,27 +193,28 @@ function showKeyStatus(message, type) {
 
 // Load Settings
 async function loadSettings() {
-    const settings = await chrome.storage.local.get([
-        'licenseKey', 'aiProvider', 'groqApiKey', 'geminiApiKey', 'openrouterApiKey',
-        'openrouterModel', 'groqModel', 'geminiModel', 'customEndpointUrl', 'customApiKey',
-        'customModel', 'promptTemplate', 'enableLike', 'enableComment',
+    const keys = ['licenseKey', 'aiProvider', 'promptTemplate', 'enableLike', 'enableComment',
         'skipAlreadyCommented', 'windowMode', 'likeToCommentMin', 'likeToCommentMax',
-        'delayMin', 'delayMax'
-    ]);
+        'delayMin', 'delayMax', 'customEndpointUrl', 'customApiKey', 'customModel'];
+    PROVIDERS.forEach(p => {
+        if (p !== 'custom') {
+            keys.push(p + 'ApiKey');
+            keys.push(p + 'Model');
+        }
+    });
+    const settings = await chrome.storage.local.get(keys);
 
     licenseKeyInput.value = settings.licenseKey || '';
 
     const aiProvider = settings.aiProvider || DEFAULT_SETTINGS.aiProvider;
-    document.querySelector(`input[name="aiProvider"][value="${aiProvider}"]`).checked = true;
+    const radio = document.querySelector(`input[name="aiProvider"][value="${aiProvider}"]`);
+    if (radio) radio.checked = true;
 
-    groqApiKeyInput.value = settings.groqApiKey || '';
-    geminiApiKeyInput.value = settings.geminiApiKey || '';
-    openrouterApiKeyInput.value = settings.openrouterApiKey || '';
-    openrouterModelSelect.value = settings.openrouterModel || DEFAULT_SETTINGS.openrouterModel;
-    groqModelSelect.value = settings.groqModel || DEFAULT_SETTINGS.groqModel;
-    geminiModelSelect.value = settings.geminiModel || DEFAULT_SETTINGS.geminiModel;
+    PROVIDERS.forEach(p => {
+        if (keyInputs[p]) keyInputs[p].value = settings[p + 'ApiKey'] || '';
+        if (modelInputs[p]) modelInputs[p].value = settings[p + 'Model'] || DEFAULT_SETTINGS[p + 'Model'] || '';
+    });
     customEndpointUrlInput.value = settings.customEndpointUrl || '';
-    customApiKeyInput.value = settings.customApiKey || '';
     customModelInput.value = settings.customModel || '';
 
     promptTemplateInput.value = settings.promptTemplate || DEFAULT_SETTINGS.promptTemplate;
@@ -207,10 +234,9 @@ async function saveSettings() {
 
     const settings = {
         aiProvider: selectedProvider,
-        groqApiKey: groqApiKeyInput.value.trim(),
-        geminiApiKey: geminiApiKeyInput.value.trim(),
-        openrouterApiKey: openrouterApiKeyInput.value.trim(),
-        openrouterModel: openrouterModelSelect.value,
+        customEndpointUrl: customEndpointUrlInput.value.trim(),
+        customApiKey: customApiKeyInput.value.trim(),
+        customModel: customModelInput.value.trim(),
         promptTemplate: promptTemplateInput.value.trim(),
         enableLike: enableLikeCheckbox.checked,
         enableComment: enableCommentCheckbox.checked,
@@ -222,17 +248,28 @@ async function saveSettings() {
         delayMax: parseInt(delayMaxInput.value)
     };
 
-    // Validate API key
-    if (selectedProvider === 'groq' && !settings.groqApiKey) {
-        showMessage('error', '❌ GROQ API key is required');
+    PROVIDERS.forEach(p => {
+        if (p !== 'custom' && keyInputs[p]) {
+            settings[p + 'ApiKey'] = keyInputs[p].value.trim();
+            if (modelInputs[p]) settings[p + 'Model'] = modelInputs[p].value.trim();
+        }
+    });
+
+    // Validate selected provider config
+    const PROVIDER_NAMES = {
+        openai: 'OpenAI', claude: 'Claude', grok: 'Grok',
+        deepseek: 'DeepSeek', gemini: 'Gemini', custom: 'Custom Endpoint'
+    };
+
+    if (selectedProvider !== 'custom' && !settings[selectedProvider + 'ApiKey']) {
+        showMessage('error', `❌ ${PROVIDER_NAMES[selectedProvider]} API key is required`);
         return;
-    } else if (selectedProvider === 'gemini' && !settings.geminiApiKey) {
-        showMessage('error', '❌ Gemini API key is required');
+    }
+    if (selectedProvider !== 'custom' && !settings[selectedProvider + 'Model']) {
+        showMessage('error', `❌ Model name for ${PROVIDER_NAMES[selectedProvider]} is required`);
         return;
-    } else if (selectedProvider === 'openrouter' && !settings.openrouterApiKey) {
-        showMessage('error', '❌ OpenRouter API key is required');
-        return;
-    } else if (selectedProvider === 'custom') {
+    }
+    if (selectedProvider === 'custom') {
         if (!settings.customEndpointUrl) {
             showMessage('error', '❌ Custom endpoint URL is required');
             return;

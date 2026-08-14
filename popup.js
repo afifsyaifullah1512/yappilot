@@ -79,18 +79,20 @@ function setupEventListeners() {
     switchAIBtn.addEventListener('click', async () => {
       const provider = document.getElementById('aiProviderSwitch').value;
       const settings = await chrome.storage.local.get([
-        'groqApiKey', 'geminiApiKey', 'openrouterApiKey', 'openrouterModel'
+        'openaiApiKey', 'claudeApiKey', 'grokApiKey', 'deepseekApiKey', 'geminiApiKey',
+        'openaiModel', 'claudeModel', 'grokModel', 'deepseekModel', 'geminiModel',
+        'customEndpointUrl', 'customModel'
       ]);
 
       let apiKey = '';
       let model = '';
 
-      if (provider === 'groq') apiKey = settings.groqApiKey;
-      else if (provider === 'gemini') apiKey = settings.geminiApiKey;
-      else if (provider === 'openrouter') {
-        apiKey = settings.openrouterApiKey;
-        model = settings.openrouterModel;
-      }
+      if (provider === 'openai') { apiKey = settings.openaiApiKey; model = settings.openaiModel; }
+      else if (provider === 'claude') { apiKey = settings.claudeApiKey; model = settings.claudeModel; }
+      else if (provider === 'grok') { apiKey = settings.grokApiKey; model = settings.grokModel; }
+      else if (provider === 'deepseek') { apiKey = settings.deepseekApiKey; model = settings.deepseekModel; }
+      else if (provider === 'gemini') { apiKey = settings.geminiApiKey; model = settings.geminiModel; }
+      else if (provider === 'custom') { apiKey = settings.customEndpointUrl; model = settings.customModel; }
 
       chrome.runtime.sendMessage({ type: 'SWITCH_AI_PROVIDER', provider, apiKey, model });
       addLog({ type: 'success', message: `Switching to ${provider.toUpperCase()}...` });
@@ -256,21 +258,30 @@ async function handleStart() {
   }
 
   // Check if settings configured
-  const settings = await chrome.storage.local.get(['aiProvider', 'groqApiKey', 'geminiApiKey', 'openrouterApiKey']);
-  const aiProvider = settings.aiProvider || 'groq';
+  const settings = await chrome.storage.local.get(['aiProvider', 'openaiApiKey', 'claudeApiKey', 'grokApiKey', 'deepseekApiKey', 'geminiApiKey', 'customEndpointUrl']);
+  const aiProvider = settings.aiProvider || 'gemini';
 
   let apiKeyMissing = false;
   let providerName = '';
 
-  if (aiProvider === 'groq' && !settings.groqApiKey) {
+  if (aiProvider === 'openai' && !settings.openaiApiKey) {
     apiKeyMissing = true;
-    providerName = 'GROQ';
+    providerName = 'OpenAI';
+  } else if (aiProvider === 'claude' && !settings.claudeApiKey) {
+    apiKeyMissing = true;
+    providerName = 'Claude';
+  } else if (aiProvider === 'grok' && !settings.grokApiKey) {
+    apiKeyMissing = true;
+    providerName = 'Grok';
+  } else if (aiProvider === 'deepseek' && !settings.deepseekApiKey) {
+    apiKeyMissing = true;
+    providerName = 'DeepSeek';
   } else if (aiProvider === 'gemini' && !settings.geminiApiKey) {
     apiKeyMissing = true;
     providerName = 'Gemini';
-  } else if (aiProvider === 'openrouter' && !settings.openrouterApiKey) {
+  } else if (aiProvider === 'custom' && !settings.customEndpointUrl) {
     apiKeyMissing = true;
-    providerName = 'OpenRouter';
+    providerName = 'Custom Endpoint';
   }
 
   if (apiKeyMissing) {
@@ -498,8 +509,8 @@ function openSettings() {
 
 // Update Current Model Display
 async function updateCurrentModelDisplay() {
-  const settings = await chrome.storage.local.get(['aiProvider', 'openrouterModel']);
-  const aiProvider = settings.aiProvider || 'groq';
+  const settings = await chrome.storage.local.get(['aiProvider', 'openaiModel', 'claudeModel', 'grokModel', 'deepseekModel', 'geminiModel', 'customModel']);
+  const aiProvider = settings.aiProvider || 'gemini';
   const currentModelDisplay = document.getElementById('currentModelDisplay');
 
   // Set dropdown to match current provider
@@ -509,15 +520,15 @@ async function updateCurrentModelDisplay() {
   }
 
   if (currentModelDisplay) {
-    let displayText = '';
-    if (aiProvider === 'groq') {
-      displayText = 'GROQ';
-    } else if (aiProvider === 'gemini') {
-      displayText = 'GEMINI';
-    } else if (aiProvider === 'openrouter') {
-      const model = settings.openrouterModel || 'meta-llama/llama-4-maverick';
-      displayText = `OPENROUTER (${model})`;
-    }
+    const displayByProvider = {
+      openai: settings.openaiModel || 'OpenAI',
+      claude: settings.claudeModel || 'Claude',
+      grok: settings.grokModel || 'Grok',
+      deepseek: settings.deepseekModel || 'DeepSeek',
+      gemini: settings.geminiModel || 'Gemini',
+      custom: `Custom: ${settings.customModel || 'endpoint'}`
+    };
+    const displayText = displayByProvider[aiProvider] || aiProvider;
     currentModelDisplay.textContent = displayText;
   }
 }
