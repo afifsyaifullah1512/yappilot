@@ -218,44 +218,9 @@ async function handleStart() {
     });
   }
 
-  // VALIDATE JWT TOKEN
-  const { licenseToken, tokenExpiry } = await chrome.storage.local.get(['licenseToken', 'tokenExpiry']);
-
-  if (!licenseToken) {
-    addLog({ type: 'error', message: '❌ License token not found!' });
-    alert('❌ License key belum divalidasi!\n\nSilakan validasi license key di Settings terlebih dahulu.');
-    openSettings();
-    return;
-  }
-
-  // Removed local expiry check - API is source of truth
-  // This fixes false positive "expired" errors
-
-  addLog({ type: 'info', message: 'Validating license with server...' });
-
-  try {
-    const response = await fetch('https://auto-yap-api.vercel.app/api/validate-token', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token: licenseToken })
-    });
-
-    const result = await response.json();
-
-    if (!result.valid) {
-      addLog({ type: 'error', message: '❌ Token invalid: ' + (result.error || 'Unknown') });
-      alert('❌ License token tidak valid!\n\nError: ' + (result.error || 'Token expired atau tidak aktif') + '\n\nSilakan validasi ulang di Settings.');
-      openSettings();
-      return;
-    }
-
-    addLog({ type: 'success', message: '✓ License valid!' });
-
-  } catch (error) {
-    addLog({ type: 'error', message: '❌ Validation failed: ' + error.message });
-    alert('❌ Gagal validasi license!\n\nError: ' + error.message + '\n\nPastikan koneksi internet aktif.');
-    return;
-  }
+  // VALIDATE LICENSE (auto-refresh token when expired - no more "validate again" loops)
+  const licenseOk = await ensureLicenseValid();
+  if (!licenseOk) return;
 
   // Check if settings configured
   const settings = await chrome.storage.local.get(['aiProvider', 'openaiApiKey', 'claudeApiKey', 'grokApiKey', 'deepseekApiKey', 'geminiApiKey', 'customEndpointUrl']);
@@ -531,4 +496,85 @@ async function updateCurrentModelDisplay() {
     const displayText = displayByProvider[aiProvider] || aiProvider;
     currentModelDisplay.textContent = displayText;
   }
+}
+
+// ---------------------------------------------------------------------------
+// License validation with automatic token refresh
+// ---------------------------------------------------------------------------
+async function getDeviceId() {
+  const stored = await chrome.storage.local.get('deviceId');
+  if (stored.deviceId) return stored.deviceId;
+  const id = (crypto.randomUUID ? crypto.randomUUID() : 'dev-' + Date.now() + '-' + Math.random().toString(36).slice(2, 10));
+  await chrome.storage.local.set({ deviceId: id });
+  return id;
+}
+
+async function ensureLicenseValid() {
+  const { licenseToken, licenseKey } = await chrome.storage.local.get(['licenseToken', 'licenseKey']);
+
+  // Nothing stored at all
+  if (!licenseToken && !licenseKey) {
+    addLog({ type: 'error', message: 'License belum ada!' });
+    alert('License key belum divalidasi!\n\nSilakan validasi license key di Settings terlebih dahulu.');
+    openSettings();
+    return false;
+  }
+
+  // 1) Try the stored token first
+  if (licenseToken) {
+    addLog({ type: 'info', message: 'Validating license with server...' });
+    try {
+      const res = await fetch('https://auto-yap-api.vercel.app/api/validate-token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: licenseToken })
+      });
+      const result = await res.json();
+      if (result.valid) {
+        addLog({ type: 'success', message: 'License valid!' });
+        return true;
+      }
+      addLog({ type: 'info', message: 'Token expired - refreshing automatically...' });
+    } catch (error) {
+      addLog({ type: 'error', message: 'Validation failed: ' + error.message });
+      alert('Gagal validasi license!\n\nError: ' + error.message + '\n\nPastikan koneksi internet aktif.');
+      return false;
+    }
+  }
+
+  // 2) Token missing/expired -> auto re-exchange using the stored license key
+  if (licenseKey) {
+    addLog({ type: 'info', message: 'Refreshing license token...' });
+    try {
+      const deviceId = await getDeviceId();
+      const res = await fetch('https://auto-yap-api.vercel.app/api/exchange-key', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key: licenseKey, device_id: deviceId })
+      });
+      const result = await res.json();
+      if (result.success) {
+        await chrome.storage.local.set({
+          licenseToken: result.token,
+          tokenExpiry: Date.now() + result.expires_in * 1000
+        });
+        addLog({ type: 'success', message: 'License refreshed automatically!' });
+        return true;
+      }
+      addLog({ type: 'error', message: 'License refresh failed: ' + (result.error || 'Unknown') });
+      alert('License gagal diperbarui otomatis!\n\nError: ' + (result.error || 'Unknown') + '\n\nSilakan cek di Settings.');
+      openSettings();
+      return false;
+    } catch (error) {
+      addLog({ type: 'error', message: 'Refresh failed: ' + error.message });
+      alert('Gagal refresh license!\n\nError: ' + error.message + '\n\nPastikan koneksi internet aktif.');
+      return false;
+    }
+  }
+
+  // Token expired and no stored key to refresh from
+  addLog({ type: 'error', message: 'License token expired!' });
+  alert('License token expired!\n\nSilakan validasi ulang di Settings.');
+  openSettings();
+  return false;
 }

@@ -40,6 +40,83 @@ const MODEL_SUGGESTIONS = {
     gemini: ['gemini-2.5-flash', 'gemini-2.5-pro', 'gemini-2.5-flash-lite', 'gemini-2.0-flash']
 };
 
+// ---------------------------------------------------------------------------
+// Auto-fetch latest model per provider (calls provider API with the user's key)
+// ---------------------------------------------------------------------------
+const MODEL_ENDPOINTS = {
+    openai: {
+        url: 'https://api.openai.com/v1/models',
+        auth: (key) => ({ 'Authorization': 'Bearer ' + key }),
+        parse: (d) => (d.data || []).map(m => m.id),
+        prefer: ['gpt-5.1', 'gpt-5', 'gpt-4.1', 'gpt-4o', 'gpt-4']
+    },
+    claude: {
+        url: 'https://api.anthropic.com/v1/models',
+        auth: (key) => ({ 'x-api-key': key, 'anthropic-version': '2023-06-01' }),
+        parse: (d) => (d.data || []).map(m => m.id),
+        prefer: ['claude-opus-4', 'claude-sonnet-4', 'claude-haiku-4', 'claude-3-7', 'claude-3-5']
+    },
+    grok: {
+        url: 'https://api.x.ai/v1/models',
+        auth: (key) => ({ 'Authorization': 'Bearer ' + key }),
+        parse: (d) => (d.data || []).map(m => m.id),
+        prefer: ['grok-4', 'grok-3', 'grok-2']
+    },
+    deepseek: {
+        url: 'https://api.deepseek.com/models',
+        auth: (key) => ({ 'Authorization': 'Bearer ' + key }),
+        parse: (d) => (d.data || []).map(m => m.id),
+        prefer: ['deepseek-chat', 'deepseek-reasoner', 'deepseek-coder']
+    },
+    gemini: {
+        url: (key) => 'https://generativelanguage.googleapis.com/v1beta/models?key=' + encodeURIComponent(key),
+        auth: () => ({}),
+        parse: (d) => (d.models || []).map(m => (m.name || '').replace(/^models\//, '')),
+        prefer: ['gemini-2.5-pro', 'gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5']
+    }
+};
+
+const MODEL_NOISE = /deprecated|internal|embed|tts|whisper|dall|audio|image|realtime|babbage|davinci|search-grounding|learning/i;
+
+async function fetchLatestModel(provider) {
+    const keyInput = keyInputs[provider];
+    const key = keyInput ? keyInput.value.trim() : '';
+    if (!key) {
+        showMessage('error', 'Enter the ' + provider + ' API key first, then click again');
+        setTimeout(() => saveMessage.classList.add('hidden'), 3500);
+        return;
+    }
+
+    const cfg = MODEL_ENDPOINTS[provider];
+    const btn = document.getElementById('auto' + provider.charAt(0).toUpperCase() + provider.slice(1) + 'Model');
+    if (btn) { btn.disabled = true; btn.textContent = 'Fetching...'; }
+
+    try {
+        const url = typeof cfg.url === 'function' ? cfg.url(key) : cfg.url;
+        const res = await fetch(url, { headers: cfg.auth(key) });
+        if (!res.ok) throw new Error('API returned ' + res.status);
+        const data = await res.json();
+
+        const models = cfg.parse(data).filter(m => m && !MODEL_NOISE.test(m));
+        if (!models.length) throw new Error('no models returned');
+
+        let picked = null;
+        for (const prefix of cfg.prefer) {
+            picked = models.find(m => m.toLowerCase().startsWith(prefix.toLowerCase()));
+            if (picked) break;
+        }
+        if (!picked) picked = models[0];
+
+        modelInputs[provider].value = picked;
+        showMessage('success', 'Model set to: ' + picked);
+    } catch (err) {
+        showMessage('error', 'Fetch latest model failed: ' + err.message);
+    } finally {
+        if (btn) { btn.disabled = false; btn.textContent = 'Get latest model'; }
+        setTimeout(() => saveMessage.classList.add('hidden'), 3500);
+    }
+}
+
 // Settings
 const promptTemplateInput = document.getElementById('promptTemplate');
 const enableLikeCheckbox = document.getElementById('enableLike');
@@ -110,6 +187,12 @@ function setupEventListeners() {
         radio.addEventListener('change', toggleProviderSections);
     });
 
+    // Auto-fetch latest model buttons
+    ['openai', 'claude', 'grok', 'deepseek', 'gemini'].forEach(p => {
+        const btn = document.getElementById('auto' + p.charAt(0).toUpperCase() + p.slice(1) + 'Model');
+        if (btn) btn.addEventListener('click', () => fetchLatestModel(p));
+    });
+
     // API Key visibility toggles
     document.getElementById('toggleOpenaiKey')?.addEventListener('click', () => togglePasswordVisibility('openaiApiKey', 'toggleOpenaiKey'));
     document.getElementById('toggleClaudeKey')?.addEventListener('click', () => togglePasswordVisibility('claudeApiKey', 'toggleClaudeKey'));
@@ -142,6 +225,13 @@ function toggleProviderSections() {
     });
 
     if (sections[selectedProvider]) sections[selectedProvider].classList.remove('hidden');
+
+    // Auto-fill model with latest if empty and key already entered
+    if (selectedProvider !== 'custom' && modelInputs[selectedProvider]
+        && !modelInputs[selectedProvider].value.trim()
+        && keyInputs[selectedProvider] && keyInputs[selectedProvider].value.trim()) {
+        fetchLatestModel(selectedProvider);
+    }
 }
 
 // Validate License Key
@@ -217,6 +307,15 @@ async function loadSettings() {
 
     licenseKeyInput.value = settings.licenseKey || '';
 
+    // Show license status if a token is already stored
+    const lic = await chrome.storage.local.get(['licenseToken', 'tokenExpiry']);
+    if (lic.licenseToken && settings.licenseKey) {
+        const expired = lic.tokenExpiry && Date.now() > lic.tokenExpiry;
+        showKeyStatus(expired
+            ? '\u2713 License active \u2014 token will auto-refresh on next run'
+            : '\u2713 License active', 'success');
+    }
+
     const aiProvider = settings.aiProvider || DEFAULT_SETTINGS.aiProvider;
     const radio = document.querySelector(`input[name="aiProvider"][value="${aiProvider}"]`);
     if (radio) radio.checked = true;
@@ -265,6 +364,10 @@ async function saveSettings() {
             if (modelInputs[p]) settings[p + 'Model'] = modelInputs[p].value.trim();
         }
     });
+
+    // Always persist the license key so the popup can auto-refresh its token later
+    const licenseVal = licenseKeyInput.value.trim();
+    if (licenseVal) settings.licenseKey = licenseVal;
 
     // Validate selected provider config
     const PROVIDER_NAMES = {

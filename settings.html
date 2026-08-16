@@ -113,7 +113,10 @@
               <button type="button" id="toggleOpenaiKey" class="affix-btn" title="Show/hide"><svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.7 7.6 1 12c1.7 4.4 6 7.5 11 7.5s9.3-3.1 11-7.5c-1.7-4.4-6-7.5-11-7.5Zm0 12.5a5 5 0 1 1 0-10 5 5 0 0 1 0 10Zm0-8a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/></svg></button>
             </div>
             <label class="field-label" for="openaiModel" style="margin-top:8px">Model</label>
-            <input type="text" id="openaiModel" class="input-mono" list="openaiModels" value="gpt-5.1" autocomplete="off" spellcheck="false">
+            <div class="row">
+              <input type="text" id="openaiModel" class="input-mono" list="openaiModels" value="gpt-5.1" autocomplete="off" spellcheck="false">
+              <button type="button" id="autoOpenaiModel" class="btn btn-ghost btn-sm" title="Fetch latest model from provider API">Get latest</button>
+            </div>
             <datalist id="openaiModels"></datalist>
             <p class="field-hint">Suggestions are shortcuts — type any model name.</p>
           </div>
@@ -128,7 +131,10 @@
               <button type="button" id="toggleClaudeKey" class="affix-btn" title="Show/hide"><svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.7 7.6 1 12c1.7 4.4 6 7.5 11 7.5s9.3-3.1 11-7.5c-1.7-4.4-6-7.5-11-7.5Zm0 12.5a5 5 0 1 1 0-10 5 5 0 0 1 0 10Zm0-8a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/></svg></button>
             </div>
             <label class="field-label" for="claudeModel" style="margin-top:8px">Model</label>
-            <input type="text" id="claudeModel" class="input-mono" list="claudeModels" value="claude-sonnet-4-5" autocomplete="off" spellcheck="false">
+            <div class="row">
+              <input type="text" id="claudeModel" class="input-mono" list="claudeModels" value="claude-sonnet-4-5" autocomplete="off" spellcheck="false">
+              <button type="button" id="autoClaudeModel" class="btn btn-ghost btn-sm" title="Fetch latest model from provider API">Get latest</button>
+            </div>
             <datalist id="claudeModels"></datalist>
             <p class="field-hint">Suggestions are shortcuts — type any model name.</p>
           </div>
@@ -143,7 +149,10 @@
               <button type="button" id="toggleGrokKey" class="affix-btn" title="Show/hide"><svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.7 7.6 1 12c1.7 4.4 6 7.5 11 7.5s9.3-3.1 11-7.5c-1.7-4.4-6-7.5-11-7.5Zm0 12.5a5 5 0 1 1 0-10 5 5 0 0 1 0 10Zm0-8a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/></svg></button>
             </div>
             <label class="field-label" for="grokModel" style="margin-top:8px">Model</label>
-            <input type="text" id="grokModel" class="input-mono" list="grokModels" value="grok-4.1" autocomplete="off" spellcheck="false">
+            <div class="row">
+              <input type="text" id="grokModel" class="input-mono" list="grokModels" value="grok-4.1" autocomplete="off" spellcheck="false">
+              <button type="button" id="autoGrokModel" class="btn btn-ghost btn-sm" title="Fetch latest model from provider API">Get latest</button>
+            </div>
             <datalist id="grokModels"></datalist>
             <p class="field-hint">Suggestions are shortcuts — type any model name.</p>
           </div>
@@ -158,7 +167,10 @@
               <button type="button" id="toggleDeepseekKey" class="affix-btn" title="Show/hide"><svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.7 7.6 1 12c1.7 4.4 6 7.5 11 7.5s9.3-3.1 11-7.5c-1.7-4.4-6-7.5-11-7.5Zm0 12.5a5 5 0 1 1 0-10 5 5 0 0 1 0 10Zm0-8a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/></svg></button>
             </div>
             <label class="field-label" for="deepseekModel" style="margin-top:8px">Model</label>
-            <input type="text" id="deepseekModel" class="input-mono" list="deepseekModels" value="deepseek-chat" autocomplete="off" spellcheck="false">
+            <div class="row">
+              <input type="text" id="deepseekModel" class="input-mono" list="deepseekModels" value="deepseek-chat" autocomplete="off" spellcheck="false">
+              <button type="button" id="autoDeepseekModel" class="btn btn-ghost btn-sm" title="Fetch latest model from provider API">Get latest</button>
+            </div>
             <datalist id="deepseekModels"></datalist>
             <p class="field-hint">Suggestions are shortcuts — type any model name.</p>
           </div>
@@ -173,7 +185,10 @@
               <button type="button" id="toggleGeminiKey" class="affix-btn" title="Show/hide"><svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.7 7.6 1 12c1.7 4.4 6 7.5 11 7.5s9.3-3.1 11-7.5c-1.7-4.4-6-7.5-11-7.5Zm0 12.5a5 5 0 1 1 0-10 5 5 0 0 1 0 10Zm0-8a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/></svg></button>
             </div>
             <label class="field-label" for="geminiModel" style="margin-top:8px">Model</label>
-            <input type="text" id="geminiModel" class="input-mono" list="geminiModels" value="gemini-2.5-flash" autocomplete="off" spellcheck="false">
+            <div class="row">
+              <input type="text" id="geminiModel" class="input-mono" list="geminiModels" value="gemini-2.5-flash" autocomplete="off" spellcheck="false">
+              <button type="button" id="autoGeminiModel" class="btn btn-ghost btn-sm" title="Fetch latest model from provider API">Get latest</button>
+            </div>
             <datalist id="geminiModels"></datalist>
             <p class="field-hint">Suggestions are shortcuts — type any model name.</p>
           </div>
