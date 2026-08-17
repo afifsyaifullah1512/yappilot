@@ -886,9 +886,11 @@ select option, select optgroup { background: var(--sc-high); color: var(--on-sur
   background: rgba(173, 198, 255, 0.08);
   border-color: rgba(173, 198, 255, 0.25);
 }
-.save-message.hidden, .status-message.hidden { display: none; }
+.save-message.hidden, .status-message.hidden { display: none !important; }
 
-/* ---------- Utilities ---------- */
+/* override hidden for programmatic show */
+#saveMessage { transition: opacity 0.4s ease; }
+
 .hidden { display: none !important; }
 
 ::-webkit-scrollbar { width: 4px; height: 4px; }

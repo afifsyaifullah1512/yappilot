@@ -507,7 +507,18 @@ async function resetSettings() {
 }
 
 // Show Message
+let _hideTimer = null;
 function showMessage(type, message) {
+    if (_hideTimer) clearTimeout(_hideTimer);
     saveMessage.textContent = message;
     saveMessage.className = `save-message ${type}`;
+    saveMessage.style.display = 'block';
+    saveMessage.style.opacity = '1';
+    _hideTimer = setTimeout(() => {
+        saveMessage.style.opacity = '0';
+        setTimeout(() => {
+            saveMessage.style.display = 'none';
+            saveMessage.className = 'save-message hidden';
+        }, 400);
+    }, 3000);
 }
