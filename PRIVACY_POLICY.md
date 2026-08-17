@@ -1,24 +1,24 @@
 # Privacy Policy for YapPilot
 
-**Last Updated:** December 9, 2024
+**Last Updated:** August 17, 2026
 
 ## Overview
 YapPilot ("the Extension") is a browser extension that automates engagement on X/Twitter posts with AI-powered replies.
 
 ## Data Collection
-The Extension does NOT collect, store, or transmit any personal data to external servers.
+YapPilot does not sell personal data or use it for advertising. The Extension stores configuration and activity data locally. It transmits limited data only when required to provide features selected by the user, as described below.
 
 ### Local Storage Only
 All data is stored locally in your browser using Chrome's storage API:
 - **Post URLs**: URLs you provide for automation
 - **Settings**: Your preferences (AI provider, API keys, delays, etc.)
 - **Success/Failed Lists**: Records of processed posts
-- **License Token**: Your license key for validation
+- **License Data**: Your license key and validation token
 
 ### API Keys
-- Your AI API keys (Groq, Gemini, OpenRouter) are stored ONLY in your local browser storage
+- Your AI API keys are stored in Chrome local storage
 - API keys are NEVER transmitted to our servers
-- API keys are used ONLY to communicate directly with the respective AI providers
+- API keys are used only to communicate directly with the AI provider selected by you
 
 ## Third-Party Services
 The Extension communicates with the following third-party services:
@@ -26,13 +26,17 @@ The Extension communicates with the following third-party services:
 ### License Validation
 - **Service**: auto-yap-api.vercel.app
 - **Purpose**: Validate your license token
-- **Data Sent**: License token only
-- **Data Stored**: None
+- **Data Sent**: License key or validation token and a locally generated device identifier
+- **Purpose**: Validate access and enforce license limits
 
 ### AI Providers (Your Choice)
-- **Groq API** (api.groq.com)
-- **Google Gemini API** (generativelanguage.googleapis.com)
-- **OpenRouter API** (openrouter.ai)
+- **OpenAI** (api.openai.com)
+- **Anthropic Claude** (api.anthropic.com)
+- **xAI Grok** (api.x.ai)
+- **Groq** (api.groq.com)
+- **DeepSeek** (api.deepseek.com)
+- **Google Gemini** (generativelanguage.googleapis.com)
+- **A custom endpoint configured by the user**, when supported
 
 **Purpose**: Generate AI replies to posts  
 **Data Sent**: Post content you're replying to  
@@ -54,7 +58,8 @@ The Extension requests the following permissions:
 
 ## Data Security
 - All data is stored locally in your browser
-- No data is transmitted to our servers except license validation
+- Post content is transmitted only to the AI provider selected by the user to generate a reply
+- License data is transmitted only to the YapPilot license service
 - You can delete all data by uninstalling the extension
 
 ## Your Rights
@@ -68,8 +73,7 @@ We may update this privacy policy. Changes will be posted with a new "Last Updat
 
 ## Contact
 For questions about this privacy policy:
-- Email: [Your Email]
-- GitHub: [Your GitHub]
+- Support: https://github.com/afifsyaifullah1512/yappilot/issues
 
 ## Consent
 By using YapPilot, you consent to this privacy policy.

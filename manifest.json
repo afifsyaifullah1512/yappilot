@@ -1,8 +1,8 @@
 {
     "manifest_version": 3,
     "name": "YapPilot",
-    "version": "2.0.0",
-    "description": "Your X engagement on autopilot. Automate likes and AI-powered replies on X/Twitter posts.",
+    "version": "2.0.1",
+    "description": "AI-assisted X engagement with configurable likes, contextual replies, delays, and activity tracking.",
     "author": "Vinsen - Yapper Indo",
     "permissions": [
         "tabs",
