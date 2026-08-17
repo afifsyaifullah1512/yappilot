@@ -23,3 +23,7 @@ stitch_yappilot_extension_interface.zip
 *.crx
 *.pem
 dist/
+
+# Debug screenshots
+error.webp
+error.png
