@@ -194,8 +194,15 @@ function setupEventListeners() {
     saveBtn.addEventListener('click', saveSettings);
     resetBtn.addEventListener('click', resetSettings);
 
+    // Provider selection is persisted IMMEDIATELY on click (no need to press Save)
     aiProviderRadios.forEach(radio => {
-        radio.addEventListener('change', toggleProviderSections);
+        radio.addEventListener('change', () => {
+            toggleProviderSections();
+            chrome.storage.local.set({ aiProvider: radio.value }, () => {
+                showMessage('success', '✓ Provider set to ' + radio.value.toUpperCase() + ' — saved');
+                setTimeout(() => saveMessage.classList.add('hidden'), 2500);
+            });
+        });
     });
 
     // Auto-fetch latest model buttons
@@ -212,6 +219,25 @@ function setupEventListeners() {
     document.getElementById('toggleDeepseekKey')?.addEventListener('click', () => togglePasswordVisibility('deepseekApiKey', 'toggleDeepseekKey'));
     document.getElementById('toggleGeminiKey')?.addEventListener('click', () => togglePasswordVisibility('geminiApiKey', 'toggleGeminiKey'));
     document.getElementById('toggleCustomKey')?.addEventListener('click', () => togglePasswordVisibility('customApiKey', 'toggleCustomKey'));
+
+    // API keys & models are auto-persisted as soon as the user leaves the field,
+    // so nothing is lost even if Save is never clicked (or Save fails validation)
+    PROVIDERS.forEach(p => {
+        if (keyInputs[p]) {
+            keyInputs[p].addEventListener('change', () => {
+                const patch = {};
+                patch[p + 'ApiKey'] = keyInputs[p].value.trim();
+                chrome.storage.local.set(patch);
+            });
+        }
+        if (modelInputs[p]) {
+            modelInputs[p].addEventListener('change', () => {
+                const patch = {};
+                patch[p + 'Model'] = modelInputs[p].value.trim();
+                chrome.storage.local.set(patch);
+            });
+        }
+    });
 }
 
 // Toggle Password Visibility

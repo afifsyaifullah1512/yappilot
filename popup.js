@@ -254,7 +254,7 @@ async function handleStart() {
   }
 
   if (apiKeyMissing) {
-    addLog({ type: 'error', message: `Please configure ${providerName} API key in settings` });
+    addLog({ type: 'error', message: `Active provider is ${providerName} but its API key is empty. Configure it in Settings (AI Engine tab).` });
     openSettings();
     return;
   }
