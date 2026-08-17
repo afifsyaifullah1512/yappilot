@@ -79,8 +79,8 @@ function setupEventListeners() {
     switchAIBtn.addEventListener('click', async () => {
       const provider = document.getElementById('aiProviderSwitch').value;
       const settings = await chrome.storage.local.get([
-        'openaiApiKey', 'claudeApiKey', 'grokApiKey', 'deepseekApiKey', 'geminiApiKey',
-        'openaiModel', 'claudeModel', 'grokModel', 'deepseekModel', 'geminiModel',
+        'openaiApiKey', 'claudeApiKey', 'grokApiKey', 'groqApiKey', 'deepseekApiKey', 'geminiApiKey',
+        'openaiModel', 'claudeModel', 'grokModel', 'groqModel', 'deepseekModel', 'geminiModel',
         'customEndpointUrl', 'customModel'
       ]);
 
@@ -90,6 +90,7 @@ function setupEventListeners() {
       if (provider === 'openai') { apiKey = settings.openaiApiKey; model = settings.openaiModel; }
       else if (provider === 'claude') { apiKey = settings.claudeApiKey; model = settings.claudeModel; }
       else if (provider === 'grok') { apiKey = settings.grokApiKey; model = settings.grokModel; }
+      else if (provider === 'groq') { apiKey = settings.groqApiKey; model = settings.groqModel; }
       else if (provider === 'deepseek') { apiKey = settings.deepseekApiKey; model = settings.deepseekModel; }
       else if (provider === 'gemini') { apiKey = settings.geminiApiKey; model = settings.geminiModel; }
       else if (provider === 'custom') { apiKey = settings.customEndpointUrl; model = settings.customModel; }
@@ -223,7 +224,7 @@ async function handleStart() {
   if (!licenseOk) return;
 
   // Check if settings configured
-  const settings = await chrome.storage.local.get(['aiProvider', 'openaiApiKey', 'claudeApiKey', 'grokApiKey', 'deepseekApiKey', 'geminiApiKey', 'customEndpointUrl']);
+  const settings = await chrome.storage.local.get(['aiProvider', 'openaiApiKey', 'claudeApiKey', 'grokApiKey', 'groqApiKey', 'deepseekApiKey', 'geminiApiKey', 'customEndpointUrl']);
   const aiProvider = settings.aiProvider || 'gemini';
 
   let apiKeyMissing = false;
@@ -238,6 +239,9 @@ async function handleStart() {
   } else if (aiProvider === 'grok' && !settings.grokApiKey) {
     apiKeyMissing = true;
     providerName = 'Grok';
+  } else if (aiProvider === 'groq' && !settings.groqApiKey) {
+    apiKeyMissing = true;
+    providerName = 'Groq';
   } else if (aiProvider === 'deepseek' && !settings.deepseekApiKey) {
     apiKeyMissing = true;
     providerName = 'DeepSeek';
@@ -474,7 +478,7 @@ function openSettings() {
 
 // Update Current Model Display
 async function updateCurrentModelDisplay() {
-  const settings = await chrome.storage.local.get(['aiProvider', 'openaiModel', 'claudeModel', 'grokModel', 'deepseekModel', 'geminiModel', 'customModel']);
+  const settings = await chrome.storage.local.get(['aiProvider', 'openaiModel', 'claudeModel', 'grokModel', 'groqModel', 'deepseekModel', 'geminiModel', 'customModel']);
   const aiProvider = settings.aiProvider || 'gemini';
   const currentModelDisplay = document.getElementById('currentModelDisplay');
 
@@ -489,6 +493,7 @@ async function updateCurrentModelDisplay() {
       openai: settings.openaiModel || 'OpenAI',
       claude: settings.claudeModel || 'Claude',
       grok: settings.grokModel || 'Grok',
+      groq: settings.groqModel || 'Groq',
       deepseek: settings.deepseekModel || 'DeepSeek',
       gemini: settings.geminiModel || 'Gemini',
       custom: `Custom: ${settings.customModel || 'endpoint'}`

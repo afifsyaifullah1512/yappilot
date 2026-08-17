@@ -64,6 +64,7 @@ async function startAutomation(urls) {
         'openaiApiKey', 'openaiModel',
         'claudeApiKey', 'claudeModel',
         'grokApiKey', 'grokModel',
+        'groqApiKey', 'groqModel',
         'deepseekApiKey', 'deepseekModel',
         'geminiApiKey', 'geminiModel',
         'customEndpointUrl', 'customApiKey', 'customModel',
@@ -73,7 +74,7 @@ async function startAutomation(urls) {
     ]);
 
     if (!settings.openaiApiKey && !settings.claudeApiKey && !settings.grokApiKey &&
-        !settings.deepseekApiKey && !settings.geminiApiKey && !settings.customEndpointUrl) {
+        !settings.groqApiKey && !settings.deepseekApiKey && !settings.geminiApiKey && !settings.customEndpointUrl) {
         sendLog('error', 'Please configure at least one AI provider in settings');
         return;
     }
@@ -88,6 +89,8 @@ async function startAutomation(urls) {
         claudeModel: settings.claudeModel || 'claude-sonnet-4-5',
         grokApiKey: settings.grokApiKey || '',
         grokModel: settings.grokModel || 'grok-4.1',
+        groqApiKey: settings.groqApiKey || '',
+        groqModel: settings.groqModel || 'llama-3.3-70b-versatile',
         deepseekApiKey: settings.deepseekApiKey || '',
         deepseekModel: settings.deepseekModel || 'deepseek-chat',
         geminiApiKey: settings.geminiApiKey || '',
@@ -116,6 +119,7 @@ async function startAutomation(urls) {
         openai: automationState.settings.openaiModel,
         claude: automationState.settings.claudeModel,
         grok: automationState.settings.grokModel,
+        groq: automationState.settings.groqModel,
         deepseek: automationState.settings.deepseekModel,
         gemini: automationState.settings.geminiModel,
         custom: automationState.settings.customModel
@@ -185,6 +189,9 @@ async function switchAIProvider(provider, apiKey, model) {
     } else if (provider === 'grok') {
         automationState.settings.grokApiKey = apiKey;
         if (model) automationState.settings.grokModel = model;
+    } else if (provider === 'groq') {
+        automationState.settings.groqApiKey = apiKey;
+        if (model) automationState.settings.groqModel = model;
     } else if (provider === 'deepseek') {
         automationState.settings.deepseekApiKey = apiKey;
         if (model) automationState.settings.deepseekModel = model;
@@ -204,6 +211,8 @@ async function switchAIProvider(provider, apiKey, model) {
         claudeModel: automationState.settings.claudeModel,
         grokApiKey: automationState.settings.grokApiKey,
         grokModel: automationState.settings.grokModel,
+        groqApiKey: automationState.settings.groqApiKey,
+        groqModel: automationState.settings.groqModel,
         deepseekApiKey: automationState.settings.deepseekApiKey,
         deepseekModel: automationState.settings.deepseekModel,
         geminiApiKey: automationState.settings.geminiApiKey,
@@ -820,6 +829,8 @@ async function generateReply(postContent) {
             return await generateWithClaude(postContent, prompt);
         } else if (provider === 'grok') {
             return await generateWithGrok(postContent, prompt);
+        } else if (provider === 'groq') {
+            return await generateWithGroq(postContent, prompt);
         } else if (provider === 'deepseek') {
             return await generateWithDeepSeek(postContent, prompt);
         } else if (provider === 'gemini') {
@@ -900,6 +911,30 @@ async function generateWithGrok(postContent, prompt) {
     });
 
     if (!response.ok) throw new Error(`Grok ${response.status}: ${(await response.text()).slice(0, 120)}`);
+    const data = await response.json();
+    return data.choices[0].message.content.trim();
+}
+
+async function generateWithGroq(postContent, prompt) {
+    // Groq — OpenAI-compatible endpoint (fast LPU inference)
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${automationState.settings.groqApiKey}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            model: automationState.settings.groqModel,
+            messages: [
+                { role: 'system', content: prompt },
+                { role: 'user', content: postContent }
+            ],
+            temperature: 0.7,
+            max_tokens: 280
+        })
+    });
+
+    if (!response.ok) throw new Error(`Groq ${response.status}: ${(await response.text()).slice(0, 120)}`);
     const data = await response.json();
     return data.choices[0].message.content.trim();
 }

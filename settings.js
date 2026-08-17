@@ -8,12 +8,13 @@ const keyStatus = document.getElementById('keyStatus');
 // AI Provider
 const aiProviderRadios = document.getElementsByName('aiProvider');
 
-const PROVIDERS = ['openai', 'claude', 'grok', 'deepseek', 'gemini', 'custom'];
+const PROVIDERS = ['openai', 'claude', 'grok', 'groq', 'deepseek', 'gemini', 'custom'];
 
 const keyInputs = {
     openai: document.getElementById('openaiApiKey'),
     claude: document.getElementById('claudeApiKey'),
     grok: document.getElementById('grokApiKey'),
+    groq: document.getElementById('groqApiKey'),
     deepseek: document.getElementById('deepseekApiKey'),
     gemini: document.getElementById('geminiApiKey'),
     custom: document.getElementById('customApiKey')
@@ -22,6 +23,7 @@ const modelInputs = {
     openai: document.getElementById('openaiModel'),
     claude: document.getElementById('claudeModel'),
     grok: document.getElementById('grokModel'),
+    groq: document.getElementById('groqModel'),
     deepseek: document.getElementById('deepseekModel'),
     gemini: document.getElementById('geminiModel')
 };
@@ -36,6 +38,7 @@ const MODEL_SUGGESTIONS = {
     openai: ['gpt-5.1', 'gpt-5.1-mini', 'gpt-5.1-nano', 'gpt-5', 'gpt-5-mini', 'gpt-4o', 'gpt-4o-mini'],
     claude: ['claude-sonnet-4-5', 'claude-opus-4-5', 'claude-haiku-4-5', 'claude-opus-4-1', 'claude-sonnet-4'],
     grok: ['grok-4.1', 'grok-4', 'grok-3-mini', 'grok-3'],
+    groq: ['llama-3.3-70b-versatile', 'llama-3.1-8b-instant', 'meta-llama/llama-4-scout-17b-16e-instruct', 'gemma2-9b-it'],
     deepseek: ['deepseek-chat', 'deepseek-reasoner'],
     gemini: ['gemini-2.5-flash', 'gemini-2.5-pro', 'gemini-2.5-flash-lite', 'gemini-2.0-flash']
 };
@@ -61,6 +64,12 @@ const MODEL_ENDPOINTS = {
         auth: (key) => ({ 'Authorization': 'Bearer ' + key }),
         parse: (d) => (d.data || []).map(m => m.id),
         prefer: ['grok-4', 'grok-3', 'grok-2']
+    },
+    groq: {
+        url: 'https://api.groq.com/openai/v1/models',
+        auth: (key) => ({ 'Authorization': 'Bearer ' + key }),
+        parse: (d) => (d.data || []).map(m => m.id),
+        prefer: ['llama-3.3', 'llama-4-scout', 'llama-3.1-8b-instant', 'mixtral', 'gemma2', 'qwen']
     },
     deepseek: {
         url: 'https://api.deepseek.com/models',
@@ -139,11 +148,13 @@ const DEFAULT_SETTINGS = {
     openaiApiKey: '',
     claudeApiKey: '',
     grokApiKey: '',
+    groqApiKey: '',
     deepseekApiKey: '',
     geminiApiKey: '',
     openaiModel: 'gpt-5.1',
     claudeModel: 'claude-sonnet-4-5',
     grokModel: 'grok-4.1',
+    groqModel: 'llama-3.3-70b-versatile',
     deepseekModel: 'deepseek-chat',
     geminiModel: 'gemini-2.5-flash',
     customEndpointUrl: '',
@@ -188,7 +199,7 @@ function setupEventListeners() {
     });
 
     // Auto-fetch latest model buttons
-    ['openai', 'claude', 'grok', 'deepseek', 'gemini'].forEach(p => {
+    ['openai', 'claude', 'grok', 'groq', 'deepseek', 'gemini'].forEach(p => {
         const btn = document.getElementById('auto' + p.charAt(0).toUpperCase() + p.slice(1) + 'Model');
         if (btn) btn.addEventListener('click', () => fetchLatestModel(p));
     });
@@ -197,6 +208,7 @@ function setupEventListeners() {
     document.getElementById('toggleOpenaiKey')?.addEventListener('click', () => togglePasswordVisibility('openaiApiKey', 'toggleOpenaiKey'));
     document.getElementById('toggleClaudeKey')?.addEventListener('click', () => togglePasswordVisibility('claudeApiKey', 'toggleClaudeKey'));
     document.getElementById('toggleGrokKey')?.addEventListener('click', () => togglePasswordVisibility('grokApiKey', 'toggleGrokKey'));
+    document.getElementById('toggleGroqKey')?.addEventListener('click', () => togglePasswordVisibility('groqApiKey', 'toggleGroqKey'));
     document.getElementById('toggleDeepseekKey')?.addEventListener('click', () => togglePasswordVisibility('deepseekApiKey', 'toggleDeepseekKey'));
     document.getElementById('toggleGeminiKey')?.addEventListener('click', () => togglePasswordVisibility('geminiApiKey', 'toggleGeminiKey'));
     document.getElementById('toggleCustomKey')?.addEventListener('click', () => togglePasswordVisibility('customApiKey', 'toggleCustomKey'));
@@ -371,7 +383,7 @@ async function saveSettings() {
 
     // Validate selected provider config
     const PROVIDER_NAMES = {
-        openai: 'OpenAI', claude: 'Claude', grok: 'Grok',
+        openai: 'OpenAI', claude: 'Claude', grok: 'Grok', groq: 'Groq',
         deepseek: 'DeepSeek', gemini: 'Gemini', custom: 'Custom Endpoint'
     };
 

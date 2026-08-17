@@ -84,6 +84,12 @@
               <span class="provider-sub">xAI</span>
             </label>
             <label class="provider-tile">
+              <input type="radio" name="aiProvider" value="groq">
+              <span class="provider-check"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm-2 15-5-5 1.4-1.4L10 14.2l7.6-7.6L19 8l-9 9Z"/></svg></span>
+              <span class="provider-name">Groq</span>
+              <span class="provider-sub">Fast Inference</span>
+            </label>
+            <label class="provider-tile">
               <input type="radio" name="aiProvider" value="deepseek">
               <span class="provider-check"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm-2 15-5-5 1.4-1.4L10 14.2l7.6-7.6L19 8l-9 9Z"/></svg></span>
               <span class="provider-name">DeepSeek</span>
@@ -154,6 +160,24 @@
               <button type="button" id="autoGrokModel" class="btn btn-ghost btn-sm" title="Fetch latest model from provider API">Get latest</button>
             </div>
             <datalist id="grokModels"></datalist>
+            <p class="field-hint">Suggestions are shortcuts — type any model name.</p>
+          </div>
+
+          <div class="field hidden" id="groqKeySection">
+            <span class="field-label">
+              Groq API Key
+              <a href="https://console.groq.com/keys" target="_blank" class="field-hint" style="display:inline-flex;align-items:center;gap:4px">Get key <svg viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7ZM14 3v2h3.6l-9.8 9.8 1.4 1.4L19 6.4V10h2V3h-7Z"/></svg></a>
+            </span>
+            <div class="with-affix">
+              <input type="password" id="groqApiKey" class="input-mono" placeholder="gsk_..." autocomplete="off" spellcheck="false">
+              <button type="button" id="toggleGroqKey" class="affix-btn" title="Show/hide"><svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.7 7.6 1 12c1.7 4.4 6 7.5 11 7.5s9.3-3.1 11-7.5c-1.7-4.4-6-7.5-11-7.5Zm0 12.5a5 5 0 1 1 0-10 5 5 0 0 1 0 10Zm0-8a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/></svg></button>
+            </div>
+            <label class="field-label" for="groqModel" style="margin-top:8px">Model</label>
+            <div class="row">
+              <input type="text" id="groqModel" class="input-mono" list="groqModels" value="llama-3.3-70b-versatile" autocomplete="off" spellcheck="false">
+              <button type="button" id="autoGroqModel" class="btn btn-ghost btn-sm" title="Fetch latest model from provider API">Get latest</button>
+            </div>
+            <datalist id="groqModels"></datalist>
             <p class="field-hint">Suggestions are shortcuts — type any model name.</p>
           </div>
 
