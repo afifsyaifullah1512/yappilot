@@ -501,18 +501,26 @@ async function processNextUrl(skipNavigation = false) {
             const reply = await generateReply(contentResult.content);
 
             if (!automationState.isRunning) return;
+
+            const cleaned = sanitizeReply(reply);
             if (!reply || reply.trim().length < 10) {
                 const errorMsg = reply ? 'AI reply too short (minimum 10 characters)' : 'Failed to generate reply';
                 sendLog('error', `[${postNumber}/${automationState.urls.length}] ${errorMsg}`);
                 sendFailedPost(currentUrl, errorMsg);
                 throw new Error(errorMsg);
             }
+            if (!cleaned.ok) {
+                const errorMsg = `AI reply rejected by sanitizer: ${cleaned.reason}`;
+                sendLog('error', `[${postNumber}/${automationState.urls.length}] ${errorMsg}`);
+                sendFailedPost(currentUrl, errorMsg);
+                throw new Error(errorMsg);
+            }
 
-            sendLog('info', `[${postNumber}/${automationState.urls.length}] Reply: "${reply.substring(0, 50)}..."`);
+            sendLog('info', `[${postNumber}/${automationState.urls.length}] Reply (${cleaned.text.length} chars): "${cleaned.text.substring(0, 60)}"`);
 
             if (!automationState.isRunning) return;
             sendLog('info', `[${postNumber}/${automationState.urls.length}] Posting reply...`);
-            replyResult = await executeContentScript(automationState.workingTabId, 'POST_REPLY', { reply });
+            replyResult = await executeContentScript(automationState.workingTabId, 'POST_REPLY', { reply: cleaned.text });
 
             if (!automationState.isRunning) return;
             if (replyResult.success) {
@@ -815,6 +823,46 @@ function sendSuccessPost(url, author, liked, commented) {
         chrome.storage.local.set({ successPosts });
         console.log('[Success Post] Added:', url);
     });
+}
+
+// ---------------------------------------------------------------------------
+// Reply sanitizer — reject garbage AI output BEFORE it gets typed into X
+// ---------------------------------------------------------------------------
+function sanitizeReply(raw) {
+    if (!raw) return { ok: false, text: '', reason: 'empty response from AI' };
+
+    // Strip control chars + zero-width chars, collapse huge whitespace runs
+    let text = raw.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u200b\u200c\u200d\ufeff]/g, '');
+    text = text.replace(/\n{4,}/g, '\n\n').trim();
+
+    if (!text) return { ok: false, text: '', reason: 'AI returned only whitespace/control chars' };
+
+    // Garbage detection: repeating-token spam (e.g. "THTHTHTH..." 14k chars)
+    const sample = text.slice(0, 500);
+    const tokens = sample.split(/\s+/).filter(Boolean);
+    if (tokens.length >= 8) {
+        const freq = {};
+        for (const t of tokens) freq[t] = (freq[t] || 0) + 1;
+        const topShare = Math.max(...Object.values(freq)) / tokens.length;
+        const uniqueRatio = Object.keys(freq).length / tokens.length;
+        if (topShare > 0.6 || uniqueRatio < 0.15) {
+            return { ok: false, text: '', reason: 'AI returned garbage/repetitive text' };
+        }
+    }
+    // Single-char flood without spaces (e.g. "AAAAAAAAAAAA")
+    if (text.length > 300 && !/\s/.test(text)) {
+        return { ok: false, text: '', reason: 'AI returned an unusable text block (no spaces)' };
+    }
+
+    // Hard cap: X comment limit is 280 chars — cut at a word boundary
+    if (text.length > 280) {
+        let cut = text.slice(0, 280);
+        const lastSpace = cut.lastIndexOf(' ');
+        if (lastSpace > 200) cut = cut.slice(0, lastSpace);
+        text = cut.trimEnd();
+    }
+
+    return { ok: true, text, reason: '' };
 }
 
 // AI Generation

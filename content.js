@@ -521,24 +521,52 @@ console.warn = () => { };
                 await sleep(500);
             }
 
-            // Type text character by character for more natural behavior
-            for (const char of replyText) {
-                // Create input event
-                const inputEvent = new InputEvent('input', {
-                    bubbles: true,
-                    cancelable: true,
-                    data: char
-                });
+            // Insert reply as ONE atomic block. The old per-character
+            // execCommand loop desynced with Draft.js and could balloon into
+            // thousands of repeated garbage characters ("THTHTHTH...").
+            const cleanText = replyText.trim();
+            const normalize = (t) => t.replace(/[\u200b\u200c\u200d\ufeff]/g, '').trim();
+            let typed = '';
 
-                // Insert text
-                document.execCommand('insertText', false, char);
-                textarea.dispatchEvent(inputEvent);
+            // Attempt 1: synthetic ClipboardEvent paste — Draft.js handles
+            // paste natively as a single atomic insertion (no desync loop)
+            try {
+                const dt = new DataTransfer();
+                dt.setData('text/plain', cleanText);
+                textarea.dispatchEvent(new ClipboardEvent('paste', {
+                    clipboardData: dt, bubbles: true, cancelable: true
+                }));
+            } catch (pasteErr) {
+                console.warn('[YapPilot] Paste method threw:', pasteErr);
+            }
+            await sleep(700);
+            typed = normalize(textarea.innerText || textarea.textContent || '');
 
-                // Random tiny delay between characters
-                await sleep(Math.random() * 50 + 20);
+            // Attempt 2 fallback: whole-string insertText if paste didn't land
+            if (typed.length < Math.max(5, Math.floor(cleanText.length * 0.5))) {
+                console.warn('[YapPilot] Paste did not land, falling back to insertText...');
+                textarea.focus();
+                document.execCommand('insertText', false, cleanText);
+                await sleep(700);
+                typed = normalize(textarea.innerText || textarea.textContent || '');
             }
 
-            await sleep(800);
+            // Human-ish pause before hitting Post
+            await sleep(800 + Math.random() * 1500);
+
+            // SAFETY GATE: verify the editor contains OUR text before posting.
+            // Empty / duplicated garbage / mismatch -> abort, never click Post.
+            console.log('[YapPilot] Editor check: typed=' + typed.length + ' chars, expected=' + cleanText.length);
+            if (typed.length === 0) {
+                return { success: false, error: 'Reply text did not land in the editor — nothing was posted' };
+            }
+            if (typed.length > cleanText.length * 1.5 || typed.length < cleanText.length * 0.5) {
+                console.error('[YapPilot] Editor desync detected — aborting BEFORE posting to avoid garbage comment');
+                return { success: false, error: 'Editor desync detected (editor ' + typed.length + ' vs expected ' + cleanText.length + ') — aborted before posting' };
+            }
+            if (!typed.startsWith(normalize(cleanText.slice(0, 20)))) {
+                return { success: false, error: 'Editor content mismatch — aborted before posting' };
+            }
 
             console.log('[YapPilot] Text typed, looking for post button...');
 
