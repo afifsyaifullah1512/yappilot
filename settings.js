@@ -92,7 +92,6 @@ async function fetchLatestModel(provider) {
     const key = keyInput ? keyInput.value.trim() : '';
     if (!key) {
         showMessage('error', 'Enter the ' + provider + ' API key first, then click again');
-        setTimeout(() => saveMessage.classList.add('hidden'), 3500);
         return;
     }
 
@@ -122,7 +121,6 @@ async function fetchLatestModel(provider) {
         showMessage('error', 'Fetch latest model failed: ' + err.message);
     } finally {
         if (btn) { btn.disabled = false; btn.textContent = 'Get latest model'; }
-        setTimeout(() => saveMessage.classList.add('hidden'), 3500);
     }
 }
 
@@ -200,7 +198,6 @@ function setupEventListeners() {
             toggleProviderSections();
             chrome.storage.local.set({ aiProvider: radio.value }, () => {
                 showMessage('success', '✓ Provider set to ' + radio.value.toUpperCase() + ' — saved');
-                setTimeout(() => saveMessage.classList.add('hidden'), 2500);
             });
         });
     });
@@ -230,7 +227,6 @@ function setupEventListeners() {
                 patch[p + 'ApiKey'] = keyInputs[p].value.trim();
                 chrome.storage.local.set(patch, () => {
                     showMessage('success', '\u2713 ' + p.toUpperCase() + ' API key saved');
-                    setTimeout(() => saveMessage.classList.add('hidden'), 2500);
                 });
             });
         }
@@ -240,7 +236,6 @@ function setupEventListeners() {
                 patch[p + 'Model'] = modelInputs[p].value.trim();
                 chrome.storage.local.set(patch, () => {
                     showMessage('success', '\u2713 ' + p.toUpperCase() + ' model saved');
-                    setTimeout(() => saveMessage.classList.add('hidden'), 2500);
                 });
             });
         }
@@ -252,7 +247,6 @@ function setupEventListeners() {
         if (val) {
             chrome.storage.local.set({ licenseKey: val }, () => {
                 showMessage('success', '\u2713 License key saved \u2014 click Validate to activate');
-                setTimeout(() => saveMessage.classList.add('hidden'), 3000);
             });
         }
     });
@@ -485,7 +479,6 @@ async function doSaveSettings() {
         }
 
         showMessage('success', '✅ Settings saved successfully!');
-        setTimeout(() => saveMessage.classList.add('hidden'), 3000);
     } catch (error) {
         showMessage('error', `❌ Failed to save: ${error.message}`);
     }
@@ -503,7 +496,6 @@ async function resetSettings() {
     await loadSettings();
     toggleProviderSections();
     showMessage('success', '✅ Settings reset to default!');
-    setTimeout(() => saveMessage.classList.add('hidden'), 3000);
 }
 
 // Show Message
