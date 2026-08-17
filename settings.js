@@ -221,20 +221,38 @@ function setupEventListeners() {
     document.getElementById('toggleCustomKey')?.addEventListener('click', () => togglePasswordVisibility('customApiKey', 'toggleCustomKey'));
 
     // API keys & models are auto-persisted as soon as the user leaves the field,
-    // so nothing is lost even if Save is never clicked (or Save fails validation)
+    // so nothing is lost even if Save is never clicked (or Save fails validation).
+    // Every auto-save shows a toast so the user KNOWS it landed.
     PROVIDERS.forEach(p => {
         if (keyInputs[p]) {
             keyInputs[p].addEventListener('change', () => {
                 const patch = {};
                 patch[p + 'ApiKey'] = keyInputs[p].value.trim();
-                chrome.storage.local.set(patch);
+                chrome.storage.local.set(patch, () => {
+                    showMessage('success', '\u2713 ' + p.toUpperCase() + ' API key saved');
+                    setTimeout(() => saveMessage.classList.add('hidden'), 2500);
+                });
             });
         }
         if (modelInputs[p]) {
             modelInputs[p].addEventListener('change', () => {
                 const patch = {};
                 patch[p + 'Model'] = modelInputs[p].value.trim();
-                chrome.storage.local.set(patch);
+                chrome.storage.local.set(patch, () => {
+                    showMessage('success', '\u2713 ' + p.toUpperCase() + ' model saved');
+                    setTimeout(() => saveMessage.classList.add('hidden'), 2500);
+                });
+            });
+        }
+    });
+
+    // License key input also auto-persists on blur (validate still needed to activate)
+    licenseKeyInput.addEventListener('change', () => {
+        const val = licenseKeyInput.value.trim();
+        if (val) {
+            chrome.storage.local.set({ licenseKey: val }, () => {
+                showMessage('success', '\u2713 License key saved \u2014 click Validate to activate');
+                setTimeout(() => saveMessage.classList.add('hidden'), 3000);
             });
         }
     });
@@ -377,7 +395,19 @@ async function loadSettings() {
 }
 
 // Save Settings (with auto-validate)
+const SAVE_BTN_HTML = '<svg viewBox="0 0 24 24"><path d="M17 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7l-4-4Zm-5 16a3 3 0 1 1 0-6 3 3 0 0 1 0 6Zm3-10H7V5h8v4Z"/></svg> Save Settings';
 async function saveSettings() {
+    saveBtn.disabled = true;
+    saveBtn.textContent = 'Saving...';
+    try {
+        await doSaveSettings();
+    } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = SAVE_BTN_HTML;
+    }
+}
+
+async function doSaveSettings() {
     const selectedProvider = document.querySelector('input[name="aiProvider"]:checked').value;
 
     const settings = {
